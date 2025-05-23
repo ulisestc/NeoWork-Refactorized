@@ -1,5 +1,5 @@
 <?php
-namespace TECWEB\MYAPI;
+namespace NEOWORK_REFACTORIZED\Models;
 abstract class DataBase{
     protected $conexion;
     public function __construct($user, $pass, $db){

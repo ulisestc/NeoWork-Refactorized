@@ -6,7 +6,7 @@
     },
     "autoload": {
         "psr-4": {
-            "TECWEB\\MYAPI\\": "myapi/"
+            "NEOWORK_REFACTORIZED\\ROUTES\\": "routes/"
         }      
     }
 }

@@ -28,7 +28,7 @@
         <form id="register-form" method="POST" autocomplete="off">
             <div class="mb-3">
                 <label for="nombres" class="form-label">Nombre(s)*</label>
-                <input type="text" name="nombres" id="nombres" class="form-control" required />
+                <input type="text" name="nombre" id="nombre" class="form-control" required />
             </div>
 
             <div class="mb-3">
@@ -79,7 +79,7 @@
     <?php include '..\templates\footer.php' ?>
 
     <!-- Script para el registro con AJAX -->
-    <script src="/neowork/public/assets/js/register.js"></script>
+    <script src="register.js"></script>
 </body>
 
 </html>
