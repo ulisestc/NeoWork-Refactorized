@@ -14,8 +14,14 @@ $controller = new AppController();
 
 $app->post('/loginUser', function (Request $request, Response $response) use ($controller) {
     $params = (array) $request->getParsedBody();
-    $controller->login($params['email'], $params['password']);
-    return $response;
+    
+    // Llama al método login del controlador
+    $result = $controller->login($params['email'], $params['password']);
+    
+    // Escribe la respuesta JSON
+    $response->getBody()->write(json_encode($result));
+    
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 $app->post('/registerUser', function (Request $request, Response $response) {

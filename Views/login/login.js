@@ -7,26 +7,26 @@ $(document).ready(function () {
         console.log({ email, password });
 
         $.ajax({
-            url: '../../Routes/Api.php', // Endpoint del servidor
+            url: 'http://localhost/NeoWork_Refactorized/Routes/loginUser', // Correct route
             type: 'POST',
             data: {
-                action: 'login', // Acción a realizar
                 email: email,
                 password: password
             },
             success: function (response) {
                 console.log(response);
-                if (response.success) {
-                    // Redirige a success.html si el login es exitoso
-                    window.location.href = '../holamundo.html';
+                response = JSON.parse(response);
+                if (response.success === true) {
+                    console.log('Login successful');
+                    // window.location.href = '../holamundo.html';
                 } else {
-                    // Redirige a fail.html si hay un error
-                    window.location.href = '../holamundo.html';
+                    console.log('Login failed');
+                    // window.location.href = '../holamundo.html';
                 }
             },
             error: function () {
-                // Redirige a fail.html en caso de error en la solicitud
-                window.location.href = '../holamundo.html';
+                console.log('Error during login');
+                // window.location.href = '../holamundo.html';
             }
         });
     });
