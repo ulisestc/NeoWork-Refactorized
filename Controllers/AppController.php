@@ -33,5 +33,11 @@ class AppController {
         
         return json_encode($response); // IMPORTANTE: return aquí
     }
+
+    public function getReviews($id) {
+        $query = new Querys();
+        $query->getReviews($id);
+        return $query->getData();
+    }
 }
 ?>
