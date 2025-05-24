@@ -7,7 +7,7 @@ require_once __DIR__ . '/DataBase.php';
 class Querys extends DataBase{
     private $data = NULL;
 
-    public function __construct($user='root', $pass='ContrasenaSegura', $db='neowork'){
+    public function __construct($user='root', $pass='', $db='neowork'){
         $this->data = array();
         parent::__construct($user, $pass, $db);
     }
