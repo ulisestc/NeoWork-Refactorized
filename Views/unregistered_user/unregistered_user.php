@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar empleos - NeoWork</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- estilos propios -->
+    <link rel="stylesheet" type="text/css" href="../styles/styles.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- icon -->
+    <link rel="icon" type="image/x-icon" href="../styles/favicon.ico">
+</head>
+<body>
+    <header class="header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0"><strong>NeoWork</strong></h2>
+        <div>
+            <a href="../login/login.php" class="btn btn-outline-dark me-2">Iniciar sesión</a>
+            <a href="../register_user/register_user.php" class="btn btn-dark">Registrarse</a>
+        </div>
+    </header>
+
+    <main class="container mt-4">
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar por puesto, empresa o palabras clave">
+                    <button class="btn btn-dark" type="button"><i class="fas fa-search"></i> Buscar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="filters-container">
+                    <select class="form-select">
+                        <option selected>Área</option>
+                        <option>Tecnología</option>
+                        <option>Salud</option>
+                    </select>
+                    <select class="form-select">
+                        <option selected>Ubicación</option>
+                        <option>Remoto</option>
+                        <option>CDMX</option>
+                    </select>
+                    <select class="form-select">
+                        <option selected>Salario</option>
+                        <option>+$10,000</option>
+                        <option>+$20,000</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Desarrollador Frontend</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">TechSolutions S.A.</h6>
+                        <p class="card-text"><i class="fas fa-map-marker-alt"></i> Remoto · <i class="fas fa-money-bill-wave"></i> $18,000 - $22,000</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Publicado hace 2 días</small>
+                            <a href="../login/login.php" class="btn btn-sm btn-outline-dark">Ver detalles</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info mt-4">
+                    <i class="fas fa-info-circle"></i> Regístrate para aplicar a empleos.
+                    <a href="../register_user/register_user.php" class="alert-link">Crear cuenta</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <?php include '../templates/footer.php' ?>
+</body>
+</html>
