@@ -68,13 +68,6 @@ class AppController {
             'message' => $raw['message'] ?? 'Error al procesar la solicitud'
         ];
     }
-    
-
-    public function getJobs(){
-        $query = new Querys();
-        $query->getJobs();
-        return $query->getData();
-    }
 
     public function getReviews($id) {
         $query = new Querys();

@@ -72,17 +72,6 @@ $app->post('/mandarSolicitud', function (Request $request, Response $response) u
     return $response->withHeader('Content-Type','application/json');
 });
 
-
-
-
-$app->get('/getJobs', function (Request $request, Response $response) use ($controller) {
-    $raw = $controller->getJobs();              // esto es un string JSON
-    $result = json_decode($raw, true);          // ahora es array
-    $response->getBody()->write(json_encode($result));
-    return $response->withHeader('Content-Type', 'application/json');
-});
-
-
 $app->post('/registerUser', function (Request $request, Response $response) {
     // Para datos JSON, usar getBody() en lugar de getParsedBody()
     $json = $request->getBody()->getContents();
