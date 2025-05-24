@@ -183,3 +183,71 @@ textarea {
         justify-content: center;
     }
 }
+
+/* vacante contenedor */
+.job-container {
+    max-width: 500px; /* Más ancho que register-container */
+    width: 90%;
+    margin: 2rem auto;
+    padding: 2.5rem 2.5rem;
+    border: 1px solid #000;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* filtros */
+.filters-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filters-container .form-select {
+    width: auto;
+    min-width: 150px;
+}
+
+/* tarjetas de empleos */
+.card {
+    border: 1px solid #ddd;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-text i {
+    margin-right: 5px;
+    color: #555;
+}
+
+/* botones */
+.btn-dark {
+    background-color: #000;
+    border-color: #000;
+}
+
+.btn-outline-dark {
+    border-color: #000;
+    color: #000;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+    .job-container {
+        padding: 1.5rem;
+    }
+    
+    .filters-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .filters-container .form-select {
+        width: 100%;
+    }
+}
