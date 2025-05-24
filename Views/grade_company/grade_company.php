@@ -30,20 +30,40 @@
             </div>
             <div class="form-text">Indica el puesto que ocupaste en esta empresa</div>
             <div class="mb-3 position-relative">
-                <label for="tiempo_emp" class="form-label">Tiempo en la empresa</label>
+                <label for="tiempo_emp" class="form-label">Tiempo en la empresa (meses)</label>
                 <input type="tiempo_emp" name="tiempo_emp" class="form-control" id="tiempo_emp" required />
             </div>
             <div class="mb-3">
-                <label class="form-label">Calificación</label>
-                <div class="rating mb-2">
-                    <input type="hidden" name="rating" id="ratingValue" required>
+                <label class="form-label">Calificación ambiente laboral</label>
+                <div class="rating mb-2" id="ambiente-container">
+                    <input type="hidden" name="ambiente" id="ambienteValue" required>
                     <i class="fa-star far" data-value="1"></i>
                     <i class="fa-star far" data-value="2"></i>
                     <i class="fa-star far" data-value="3"></i>
                     <i class="fa-star far" data-value="4"></i>
                     <i class="fa-star far" data-value="5"></i>
                 </div>
-                <div class="form-text">1 estrella = Poco safisfecho, 5 estrellas = Muy satisfecho</div>
+                <div class="form-text">1 estrella = Poco satisfecho, 5 estrellas = Muy satisfecho</div>
+
+                <label class="form-label">Calificación prestaciones</label>
+                <div class="rating mb-2" id="prestaciones-container">
+                    <input type="hidden" name="prestaciones" id="prestacionesValue" required>
+                    <i class="fa-star far" data-value="1"></i>
+                    <i class="fa-star far" data-value="2"></i>
+                    <i class="fa-star far" data-value="3"></i>
+                    <i class="fa-star far" data-value="4"></i>
+                    <i class="fa-star far" data-value="5"></i>
+                </div>
+
+                <label class="form-label">Calificación salario</label>
+                <div class="rating mb-2" id="salario-container">
+                    <input type="hidden" name="salario" id="salarioValue" required>
+                    <i class="fa-star far" data-value="1"></i>
+                    <i class="fa-star far" data-value="2"></i>
+                    <i class="fa-star far" data-value="3"></i>
+                    <i class="fa-star far" data-value="4"></i>
+                    <i class="fa-star far" data-value="5"></i>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="reseña" class="form-label">Reseña</label>
@@ -57,37 +77,53 @@
     </main>
     <?php include '..\templates\footer.php' ?>
 
+    <script src="grade_company.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const stars = document.querySelectorAll('.rating i');
-            const ratingValue = document.getElementById('ratingValue');
+            // Configuración para cada grupo de estrellas
+            function setupStarRating(containerId, inputId) {
+                const container = document.getElementById(containerId);
+                const stars = container.querySelectorAll('.fa-star');
+                const hiddenInput = document.getElementById(inputId);
 
-            stars.forEach(star => {
-                star.addEventListener('click', function() {
-                    const value = this.getAttribute('data-value');
-                    ratingValue.value = value;
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const value = this.getAttribute('data-value');
+                        hiddenInput.value = value;
 
-                    stars.forEach((s, index) => {
-                        if (index < value) {
-                            s.classList.remove('far');
-                            s.classList.add('fas');
-                        } else {
-                            s.classList.remove('fas');
-                            s.classList.add('far');
-                        }
+                        // Actualizar solo las estrellas de este grupo
+                        stars.forEach((s, index) => {
+                            if (index < value) {
+                                s.classList.remove('far');
+                                s.classList.add('fas');
+                            } else {
+                                s.classList.remove('fas');
+                                s.classList.add('far');
+                            }
+                        });
                     });
                 });
-            });
+            }
+
+            // Configurar los tres grupos de estrellas
+            setupStarRating('ambiente-container', 'ambienteValue');
+            setupStarRating('prestaciones-container', 'prestacionesValue');
+            setupStarRating('salario-container', 'salarioValue');
 
             // Validación del formulario
             document.getElementById('ratingForm').addEventListener('submit', function(e) {
-                if (!ratingValue.value) {
+                const ambiente = document.getElementById('ambienteValue').value;
+                const prestaciones = document.getElementById('prestacionesValue').value;
+                const salario = document.getElementById('salarioValue').value;
+
+                if (!ambiente || !prestaciones || !salario) {
                     e.preventDefault();
-                    alert('Por favor selecciona una calificación con estrellas');
+                    alert('Por favor selecciona una calificación para todas las categorías');
                 }
             });
         });
     </script>
+
 </body>
 
 </html>
