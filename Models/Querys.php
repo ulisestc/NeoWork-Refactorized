@@ -187,6 +187,30 @@ class Querys extends DataBase{
         $this->conexion->close();
     }
     
+    public function getCompany($id) {
+        $this->data = array();
+    
+        $query = "SELECT nombre_empresa, direccion, area, correo, fecha_registro FROM empresas WHERE id_empresa = $id";
+        $result = $this->conexion->query($query);
+    
+        if ($result) {
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $this->data[] = $row;
+                }
+                $this->data['success'] = true;
+                $this->data['message'] = 'Perfil de empresa obtenido exitosamente';
+            } else {
+                $this->data['success'] = false;
+                $this->data['message'] = 'No se encontró el perfil de la empresa';
+            }
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = 'Error en la consulta: ' . $this->conexion->error;
+        }
+    
+        $this->conexion->close();
+    }
     
 }
 ?>

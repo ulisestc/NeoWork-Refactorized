@@ -100,5 +100,17 @@ $app->get('/getUser/{id}', function (Request $request, Response $response, array
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+$app->get('/getCompany/{id}', function (Request $request, Response $response, array $args) use ($controller) {
+    $id = $args['id'];
+    
+    // Llama al método getCompany del controlador
+    $result = $controller->getCompany($id);
+    
+    // Escribe la respuesta JSON
+    $response->getBody()->write(json_encode($result));
+    
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
 $app->run();
 ?>

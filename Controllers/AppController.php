@@ -45,5 +45,11 @@ class AppController {
         $query->getUser($id);
         return $query->getData();
     }
+
+    public function getCompany($id) {
+        $query = new Querys();
+        $query->getCompany($id);
+        return $query->getData();
+    }
 }
 ?>
