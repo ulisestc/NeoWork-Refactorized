@@ -78,6 +78,9 @@
 
     <?php include '..\templates\footer.php' ?>
 
+    <!-- Script para el registro con AJAX -->
+    <script src="register_company.js"></script>
+
 </body>
 
 </html>
