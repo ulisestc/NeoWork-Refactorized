@@ -81,7 +81,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <!-- Script para usurio no registrado -->
-    <script src="../public/js/unregistered_user.js"></script>
+    <script src="unregistered_user.js"></script>
 </body>
 </body>
 </html>
