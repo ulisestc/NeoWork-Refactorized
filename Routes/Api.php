@@ -12,17 +12,76 @@ $app->setBasePath("/NeoWork_Refactorized/Routes");
 
 $controller = new AppController();
 
+// Asegúrate de tener este middleware AL PRINCIPIO de tu aplicación Slim
+$app->addBodyParsingMiddleware();
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+// Api.php
 $app->post('/loginUser', function (Request $request, Response $response) use ($controller) {
+    session_start(); // Iniciar sesión
+
+    $params = (array) $request->getParsedBody();    
+    $result = $controller->loginUs($params['email'], $params['password']);
+    
+    if ($result['success']) {
+        $_SESSION['id_candidato'] = $result['user']['id_candidato'];
+        $_SESSION['user_type'] = 'candidato'; // Opcional: para identificar tipo de usuario
+    }
+
+    $response->getBody()->write(json_encode($result));
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
+$app->post('/loginCompany', function (Request $request, Response $response) use ($controller) {
     $params = (array) $request->getParsedBody();
     
     // Llama al método login del controlador
-    $result = $controller->login($params['email'], $params['password']);
+    $result = $controller->loginCom($params['email'], $params['password']);
     
     // Escribe la respuesta JSON
     $response->getBody()->write(json_encode($result));
     
     return $response->withHeader('Content-Type', 'application/json');
 });
+
+$app->post('/mandarSolicitud', function (Request $request, Response $response) use ($controller) {
+    // Desactivar la salida directa de errores
+    ini_set('display_errors', 0);
+    ini_set('log_errors', 1);
+    if (ob_get_length()) ob_clean();
+
+    $params = $request->getParsedBody();
+    $idPuesto    = $params['id_puesto']    ?? null;
+    $idCandidato = $params['id_candidato'] ?? null;
+
+    if (!$idPuesto || !$idCandidato) {
+        $payload = ['success'=>false,'message'=>'Faltan id_puesto o id_candidato'];
+        $response->getBody()->write(json_encode($payload));
+        return $response->withHeader('Content-Type','application/json')->withStatus(400);
+    }
+
+    $fecha = date('Y-m-d H:i:s');
+    $estado = 'estado';
+
+    $result = $controller->solicitarTrabajo($idPuesto, $idCandidato, $fecha, $estado);
+
+    // Limpiar cualquier salida previa
+    if (ob_get_length()) ob_clean();
+
+    $response->getBody()->write(json_encode($result));
+    return $response->withHeader('Content-Type','application/json');
+});
+
+
+
+
+$app->get('/getJobs', function (Request $request, Response $response) use ($controller) {
+    $raw = $controller->getJobs();              // esto es un string JSON
+    $result = json_decode($raw, true);          // ahora es array
+    $response->getBody()->write(json_encode($result));
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
 
 $app->post('/registerUser', function (Request $request, Response $response) {
     // Para datos JSON, usar getBody() en lugar de getParsedBody()
@@ -74,6 +133,48 @@ $app->post('/registerUser', function (Request $request, Response $response) {
     $response->getBody()->write($result);
     
     return $response->withHeader('Content-Type', 'application/json');
+});
+
+$app->post('/registerCompany', function (Request $request, Response $response) {
+    $json = $request->getBody()->getContents();
+    $data = json_decode($json, true);
+
+     // Debug: log de los datos recibidos
+     error_log("JSON recibido en API: " . $json);
+     error_log("Data parseada en API: " . print_r($data, true));
+
+    // Verificar si el JSON es válido
+    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+        $errorResponse = [
+            'status' => 'error',
+            'message' => 'JSON inválido: ' . json_last_error_msg()
+        ];
+        $response->getBody()->write(json_encode($errorResponse));
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
+
+    $nombre     = $data['nombre'];
+    $direccion  = $data['direccion'];
+    $area       = $data['area'];
+    $email      = $data['email'];
+    $password     = $data['password'];
+    $fecha      = date('Y-m-d H:i:s');
+
+    $controller = new AppController();
+    $result = $controller->registerEmpresa($nombre, $direccion, $area, $email, $password, $fecha);
+
+    // Verificar que $result no sea null
+    if ($result === null) {
+        $result = json_encode([
+            'status' => 'error',
+            'message' => 'Error interno del servidor'
+        ]);
+    }
+
+    $response->getBody()->write($result);
+
+    return $response->withHeader('Content-Type', 'application/json');
+
 });
 
 $app->run();

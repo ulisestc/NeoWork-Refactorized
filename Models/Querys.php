@@ -7,13 +7,17 @@ require_once __DIR__ . '/DataBase.php';
 class Querys extends DataBase{
     private $data = NULL;
 
-    public function __construct($user='root', $pass='ContrasenaSegura', $db='neowork'){
+    public function __construct($user='root', $pass='', $db='neowork'){
         $this->data = array();
         parent::__construct($user, $pass, $db);
     }
 
     public function getData(){
         return json_encode($this->data, JSON_PRETTY_PRINT);
+    }
+
+    public function getDataArreglo(){
+        return $this->data;
     }
 
     public function loginUser($email, $password){
@@ -49,6 +53,41 @@ class Querys extends DataBase{
     
         $this->conexion->close();
     }
+
+    public function loginCompany($email, $password){
+        $this->data = array();
+    
+        // Prepara la consulta para evitar inyección SQL
+        $stmt = $this->conexion->prepare(
+            "SELECT * FROM Empresas WHERE correo = ? AND contraseña = ?"
+        );
+    
+        if ($stmt) {
+            $stmt->bind_param("ss", $email, $password);
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                if ($result->num_rows > 0) {
+                    $user = $result->fetch_assoc();
+                    $this->data['success'] = true;
+                    $this->data['message'] = 'Inicio de sesión exitoso';
+                    $this->data['user'] = $user; // Devuelve los datos del usuario
+                } else {
+                    $this->data['success'] = false;
+                    $this->data['message'] = 'Correo o contraseña incorrectos';
+                }
+            } else {
+                $this->data['success'] = false;
+                $this->data['message'] = 'Error al ejecutar la consulta: ' . $stmt->error;
+            }
+            $stmt->close();
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = 'Error en la preparación de la consulta: ' . $this->conexion->error;
+        }
+    
+        $this->conexion->close();
+    }
+
 
     public function registerUser($nombre, $apellidos, $edad, $sexo, $correo, $contraseña, $fecha_registro = null) {
         $this->data = [];
@@ -136,6 +175,160 @@ class Querys extends DataBase{
         // 4) Cerrar conexión
         $this->conexion->close();
     }
+
+    public function registerCompany($nombre, $direccion, $area, $email, $password, $fecha_registro = null) {
+        $this->data = [];
     
+        $checkSql = "SELECT 1 FROM Empresas WHERE correo = ? LIMIT 1";
+        if ($checkStmt = $this->conexion->prepare($checkSql)) {
+            $checkStmt->bind_param("s", $correo);
+            $checkStmt->execute();
+            $checkStmt->store_result();
+    
+            if ($checkStmt->num_rows > 0) {
+                $this->data['success'] = false;
+                $this->data['message'] = "El correo electrónico ya está registrado";
+                $checkStmt->close();
+                $this->conexion->close();
+                return;
+            }
+    
+            $checkStmt->close();
+        } else {
+            // Error preparando la consulta de verificación
+            $this->data['success'] = false;
+            $this->data['message'] = "Error al verificar correo: " . $this->conexion->error;
+            error_log("Error preparación SELECT: " . $this->conexion->error);
+            $this->conexion->close();
+            return;
+        }
+    
+        // 3) Insertar el nuevo usuario
+        // Si no se pasó fecha, la generamos ahora
+        if (is_null($fecha_registro)) {
+            $fecha_registro = date('Y-m-d H:i:s');
+        }
+    
+        $insertSql = "
+            INSERT INTO Empresas
+              (nombre_empresa, direccion, area, correo, contraseña, fecha_registro)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ";
+        if ($stmt = $this->conexion->prepare($insertSql)) {
+            $stmt->bind_param("ssssss", 
+                $nombre, 
+                $direccion, 
+                $area, 
+                $email, 
+                $password, 
+                $fecha_registro
+            );
+    
+            if ($stmt->execute()) {
+                $this->data['success'] = true;
+                $this->data['message'] = "Registro exitoso";
+            } else {
+                $this->data['success'] = false;
+                $this->data['message'] = "Error al ejecutar INSERT: " . $stmt->error;
+                error_log("Error SQL INSERT: " . $stmt->error);
+            }
+    
+            $stmt->close();
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = "Error al preparar INSERT: " . $this->conexion->error;
+            error_log("Error preparación INSERT: " . $this->conexion->error);
+        }
+    
+        $this->conexion->close();
+    }
+    
+    public function registrarSolicitud($idPuesto, $idCandidato, $fechaSolicitud, $estado) {
+        // Reset de data
+        $this->data = [];
+    
+        $insertSql = "
+            INSERT INTO Solicitudes
+                (id_puesto, id_candidato, fecha_solicitud, estado)
+            VALUES (?, ?, ?, ?)
+        ";
+    
+        $stmt = $this->conexion->prepare($insertSql);
+        if (!$stmt) {
+            $this->data['success'] = false;
+            $this->data['message'] = "Error en preparación: " . $this->conexion->error;
+            error_log("registrarSolicitud prepare error: " . $this->conexion->error);
+            return false;
+        }
+    
+        $stmt->bind_param("iiss", $idPuesto, $idCandidato, $fechaSolicitud, $estado);
+        if ($stmt->execute()) {
+            $this->data['success'] = true;
+            $this->data['message'] = "Solicitud registrada con éxito";
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = "Error en ejecución: " . $stmt->error;
+            error_log("registrarSolicitud execute error: " . $stmt->error);
+        }
+    
+        $stmt->close();
+        return $this->data['success'];
+    }
+
+    public function getJobs() {
+        $this->data = array();
+        $vacantes = array();
+        
+        // DEBUG: Verificar conexión
+        if (!$this->conexion) {
+            error_log('Error: No hay conexión a la base de datos');
+            $this->data = array(
+                'success' => false,
+                'message' => 'Error de conexión a la base de datos',
+                'data' => array()
+            );
+            return;
+        }
+        
+        $query = "SELECT * FROM puestos ORDER BY fecha_publicacion DESC";
+        $result = $this->conexion->query($query);
+        
+        // DEBUG: Log de la query
+        error_log('Query ejecutada: ' . $query);
+        error_log('Resultado de query: ' . ($result ? 'SUCCESS' : 'FAILED'));
+        
+        if ($result) {
+            error_log('Número de filas encontradas: ' . $result->num_rows);
+            
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $vacantes[] = $row;
+                }
+                
+                error_log('Vacantes procesadas: ' . count($vacantes));
+                
+                $this->data = array(
+                    'success' => true,
+                    'message' => 'Vacantes obtenidas exitosamente',
+                    'data' => $vacantes
+                );
+            } else {
+                $this->data = array(
+                    'success' => false,
+                    'message' => 'No se encontraron vacantes',
+                    'data' => array()
+                );
+            }
+        } else {
+            error_log('Error en query: ' . $this->conexion->error);
+            $this->data = array(
+                'success' => false,
+                'message' => 'Error en la consulta: ' . $this->conexion->error,
+                'data' => array()
+            );
+        }
+        
+        $this->conexion->close();
+    }
 }
 ?>
