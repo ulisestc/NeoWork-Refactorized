@@ -27,7 +27,8 @@ $(document).ready(function() {
 
         // Llamada AJAX al endpoint del API
         $.ajax({
-            url: `/NeoWork_Refactorized/Routes/verVacantes?${$.param(filtersData)}`,
+            // url: `/NeoWork_Refactorized/Routes/getJobs?${$.param(filtersData)}`,
+            url: `http://localhost/NeoWork_Refactorized/Routes/getJobs`,
             type: 'GET',
             success: function(jobs) {
                 console.log('Empleos recibidos:', jobs);
