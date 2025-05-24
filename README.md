@@ -1,4 +1,4 @@
-
+# ATENCIÓN -> EJECUTAR COMPOSER INSTALL AL CLONAR
 # NeoWork
 
 NeoWork es una plataforma web diseñada para facilitar la búsqueda de empleo en México, enfocándose especialmente en promover el **Trabajo Decente y el Crecimiento Económico**, alineado con el Objetivo de Desarrollo Sostenible (ODS) de la ONU.
