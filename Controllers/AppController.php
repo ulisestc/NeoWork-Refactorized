@@ -63,5 +63,11 @@ class AppController {
         $query->getApplications($id);
         return $query->getData();
     }
+
+    public function deleteJob($id){
+        $query = new Querys();
+        $query->deleteJob($id);
+        return $query->getData();
+    }
 }
 ?>

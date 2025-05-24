@@ -134,5 +134,17 @@ $app->get('/getApplications/{id}', function (Request $request, Response $respons
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+$app->delete('/deleteJob/{id}', function (Request $request, Response $response, array $args) use ($controller) {
+    $id = $args['id'];
+    
+    // Llama al método deleteJob del controlador
+    $result = $controller->deleteJob($id);
+    
+    // Escribe la respuesta JSON
+    $response->getBody()->write(json_encode($result));
+    
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
 $app->run();
 ?>

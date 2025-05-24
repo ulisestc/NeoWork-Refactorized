@@ -261,5 +261,30 @@ class Querys extends DataBase{
     
         $this->conexion->close();
     }
+
+    public function deleteJob($id){
+        $this->data = array();
+        //ELIOMINA COMENTARIOS
+        $query1 = "DELETE FROM comentariospuestos WHERE id_puesto = $id";
+        $this->conexion->query($query1);
+
+        // ELIMINA SOLICITUDES
+        $query2 = "DELETE FROM solicitudes WHERE id_puesto = $id";
+        $this->conexion->query($query2);
+
+        // ELIMINA PUESTO
+        $query3 = "DELETE FROM puestos WHERE id_puesto = $id";
+        // $this->conexion->query($query2);
+        $result = $this->conexion->query($query3);
+        
+        if ($result) {
+            $this->data['success'] = true;
+            $this->data['message'] = 'Vacante eliminada exitosamente';
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = 'Error al eliminar la vacante: ' . $this->conexion->error;
+        }
+        $this->conexion->close();
+    }
 }
 ?>
