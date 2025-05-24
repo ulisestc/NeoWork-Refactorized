@@ -51,5 +51,11 @@ class AppController {
         $query->getCompany($id);
         return $query->getData();
     }
+
+    public function getJobs(){
+        $query = new Querys();
+        $query->getJobs();
+        return $query->getData();
+    }
 }
 ?>

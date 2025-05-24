@@ -211,6 +211,31 @@ class Querys extends DataBase{
     
         $this->conexion->close();
     }
+
+    public function getJobs() {
+        $this->data = array();
+    
+        $query = "SELECT * FROM puestos";
+        $result = $this->conexion->query($query);
+    
+        if ($result) {
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $this->data[] = $row;
+                }
+                $this->data['success'] = true;
+                $this->data['message'] = 'Vacantes obtenidas exitosamente';
+            } else {
+                $this->data['success'] = false;
+                $this->data['message'] = 'No se encontraron vacantes';
+            }
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = 'Error en la consulta: ' . $this->conexion->error;
+        }
+    
+        $this->conexion->close();
+    }
     
 }
 ?>
