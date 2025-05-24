@@ -57,5 +57,11 @@ class AppController {
         $query->getJobs();
         return $query->getData();
     }
+
+    public function getApplications($id){
+        $query = new Querys();
+        $query->getApplications($id);
+        return $query->getData();
+    }
 }
 ?>

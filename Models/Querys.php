@@ -236,6 +236,30 @@ class Querys extends DataBase{
     
         $this->conexion->close();
     }
+
+    public function getApplications($id) {
+        $this->data = array();
     
+        $query = "SELECT * FROM solicitudes WHERE id_puesto = $id";
+        $result = $this->conexion->query($query);
+    
+        if ($result) {
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $this->data[] = $row;
+                }
+                $this->data['success'] = true;
+                $this->data['message'] = 'Postulaciones obtenidas exitosamente';
+            } else {
+                $this->data['success'] = false;
+                $this->data['message'] = 'No se encontraron postulaciones';
+            }
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = 'Error en la consulta: ' . $this->conexion->error;
+        }
+    
+        $this->conexion->close();
+    }
 }
 ?>

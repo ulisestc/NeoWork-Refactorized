@@ -122,5 +122,17 @@ $app->get('/getJobs', function (Request $request, Response $response) use ($cont
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+$app->get('/getApplications/{id}', function (Request $request, Response $response, array $args) use ($controller) {
+    $id = $args['id'];
+    
+    // Llama al método getApplications del controlador
+    $result = $controller->getApplications($id);
+    
+    // Escribe la respuesta JSON
+    $response->getBody()->write(json_encode($result));
+    
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
 $app->run();
 ?>
