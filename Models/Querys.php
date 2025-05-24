@@ -161,6 +161,31 @@ class Querys extends DataBase{
     
         $this->conexion->close();
     }
+
+    public function getUser($id) {
+        $this->data = array();
+    
+        $query = "SELECT nombre, apellidos, edad, sexo, correo, fecha_registro FROM candidatos WHERE id_candidato = $id";
+        $result = $this->conexion->query($query);
+    
+        if ($result) {
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $this->data[] = $row;
+                }
+                $this->data['success'] = true;
+                $this->data['message'] = 'Perfil obtenido exitosamente';
+            } else {
+                $this->data['success'] = false;
+                $this->data['message'] = 'No se encontró el perfil';
+            }
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = 'Error en la consulta: ' . $this->conexion->error;
+        }
+    
+        $this->conexion->close();
+    }
     
     
 }

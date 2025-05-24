@@ -39,5 +39,11 @@ class AppController {
         $query->getReviews($id);
         return $query->getData();
     }
+
+    public function getUser($id) {
+        $query = new Querys();
+        $query->getUser($id);
+        return $query->getData();
+    }
 }
 ?>
