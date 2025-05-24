@@ -76,5 +76,17 @@ $app->post('/registerUser', function (Request $request, Response $response) {
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+$app->get('/getReviews/{id}', function (Request $request, Response $response, array $args) use ($controller) {
+    $id = $args['id'];
+    
+    // Llama al método getReviews del controlador
+    $result = $controller->getReviews($id);
+    
+    // Escribe la respuesta JSON
+    $response->getBody()->write(json_encode($result));
+    
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
 $app->run();
 ?>

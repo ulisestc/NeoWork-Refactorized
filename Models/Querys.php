@@ -136,6 +136,32 @@ class Querys extends DataBase{
         // 4) Cerrar conexión
         $this->conexion->close();
     }
+
+    public function getReviews($id) {
+        $this->data = array();
+    
+        $query = "SELECT * FROM reseñas WHERE id_empresa = $id";
+        $result = $this->conexion->query($query);
+    
+        if ($result) {
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $this->data[] = $row;
+                }
+                $this->data['success'] = true;
+                $this->data['message'] = 'Reseñas obtenidas exitosamente';
+            } else {
+                $this->data['success'] = false;
+                $this->data['message'] = 'No se encontraron reseñas';
+            }
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = 'Error en la consulta: ' . $this->conexion->error;
+        }
+    
+        $this->conexion->close();
+    }
+    
     
 }
 ?>
