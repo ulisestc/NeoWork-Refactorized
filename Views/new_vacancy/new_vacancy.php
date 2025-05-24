@@ -50,5 +50,12 @@
         </form>
     </main>
     <?php include '../templates/footer.php' ?>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Script para nueva vacante -->
+    <script src="../public/js/new_vacancy.js"></script>
+</body>
 </body>
 </html>
