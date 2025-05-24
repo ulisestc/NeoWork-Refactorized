@@ -352,26 +352,57 @@ class Querys extends DataBase{
 
     public function getJobs() {
         $this->data = array();
-    
-        $query = "SELECT * FROM puestos";
+        $vacantes = array();
+        
+        // DEBUG: Verificar conexión
+        if (!$this->conexion) {
+            error_log('Error: No hay conexión a la base de datos');
+            $this->data = array(
+                'success' => false,
+                'message' => 'Error de conexión a la base de datos',
+                'data' => array()
+            );
+            return;
+        }
+        
+        $query = "SELECT * FROM puestos ORDER BY fecha_publicacion DESC";
         $result = $this->conexion->query($query);
-    
+        
+        // DEBUG: Log de la query
+        error_log('Query ejecutada: ' . $query);
+        error_log('Resultado de query: ' . ($result ? 'SUCCESS' : 'FAILED'));
+        
         if ($result) {
+            error_log('Número de filas encontradas: ' . $result->num_rows);
+            
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    $this->data[] = $row;
+                    $vacantes[] = $row;
                 }
-                $this->data['success'] = true;
-                $this->data['message'] = 'Vacantes obtenidas exitosamente';
+                
+                error_log('Vacantes procesadas: ' . count($vacantes));
+                
+                $this->data = array(
+                    'success' => true,
+                    'message' => 'Vacantes obtenidas exitosamente',
+                    'data' => $vacantes
+                );
             } else {
-                $this->data['success'] = false;
-                $this->data['message'] = 'No se encontraron vacantes';
+                $this->data = array(
+                    'success' => false,
+                    'message' => 'No se encontraron vacantes',
+                    'data' => array()
+                );
             }
         } else {
-            $this->data['success'] = false;
-            $this->data['message'] = 'Error en la consulta: ' . $this->conexion->error;
+            error_log('Error en query: ' . $this->conexion->error);
+            $this->data = array(
+                'success' => false,
+                'message' => 'Error en la consulta: ' . $this->conexion->error,
+                'data' => array()
+            );
         }
-    
+        
         $this->conexion->close();
     }
 

@@ -161,12 +161,9 @@ $app->get('/getCompany/{id}', function (Request $request, Response $response, ar
 });
 
 $app->get('/getJobs', function (Request $request, Response $response) use ($controller) {
-    // Llama al método getJobs del controlador
-    $result = $controller->getJobs();
-    
-    // Escribe la respuesta JSON
+    $raw = $controller->getJobs();              
+    $result = json_decode($raw, true);          
     $response->getBody()->write(json_encode($result));
-    
     return $response->withHeader('Content-Type', 'application/json');
 });
 
