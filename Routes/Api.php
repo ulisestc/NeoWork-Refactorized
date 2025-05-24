@@ -63,7 +63,7 @@ $app->post('/mandarSolicitud', function (Request $request, Response $response) u
     $fecha = date('Y-m-d H:i:s');
     $estado = 'estado';
 
-    $result = $controller->solicitarTrabajo($idPuesto, $idCandidato, $fecha, $estado);
+    $result = $controller->solicitarTrabajo($idPuesto, $idCandidato, $fecha, "enviada");
 
     // Limpiar cualquier salida previa
     if (ob_get_length()) ob_clean();
