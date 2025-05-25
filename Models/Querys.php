@@ -318,30 +318,57 @@ class Querys extends DataBase{
         return $this->data['success'];
     }
 
-    public function getReviews($id) {
-        $this->data = array();
+    public function editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion) {
+        $this->data = [];
     
-        $query = "SELECT * FROM reseñas WHERE id_empresa = $id";
-        $result = $this->conexion->query($query);
+        $sql = "
+            UPDATE Puestos
+            SET 
+                id_empresa       = ?,
+                titulo           = ?,
+                descripcion      = ?,
+                salario          = ?,
+                prestaciones     = ?,
+                fecha_publicacion= ?
+            WHERE id_puesto = ?
+        ";
     
-        if ($result) {
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $this->data[] = $row;
-                }
-                $this->data['success'] = true;
-                $this->data['message'] = 'Reseñas obtenidas exitosamente';
-            } else {
-                $this->data['success'] = false;
-                $this->data['message'] = 'No se encontraron reseñas';
-            }
-        } else {
-            $this->data['success'] = false;
-            $this->data['message'] = 'Error en la consulta: ' . $this->conexion->error;
+        $stmt = $this->conexion->prepare($sql);
+        if (!$stmt) {
+            $this->data = [
+                'success' => false,
+                'message' => 'Error en prepare: ' . $this->conexion->error
+            ];
+            return $this->data;
         }
     
-        $this->conexion->close();
+        // Tipos: i = int, s = string (6 strings y al final otro int para el id)
+        $stmt->bind_param(
+            "isssssi",
+            $id_empresa,
+            $titulo,
+            $descripcion,
+            $salario,
+            $prestaciones,
+            $fecha_publicacion,
+            $id
+        );
+    
+        if ($stmt->execute()) {
+            $this->data = [
+                'success' => true,
+                'message' => 'Vacante editada con éxito'
+            ];
+        } else {
+            $this->data = [
+                'success' => false,
+                'message' => 'Error en execute: ' . $stmt->error
+            ];
+        }
+        $stmt->close();
+        return $this->data;
     }
+    
 
     public function getUser($id) {
         $this->data = array();
@@ -536,6 +563,66 @@ class Querys extends DataBase{
         
         $this->conexion->close();
     }
+
+    public function getJob($id) {
+        $this->data = [];
+    
+        // Preparar la consulta con placeholder
+        $sql = "
+            SELECT 
+                Puestos.id_puesto,
+                Puestos.id_empresa,
+                Puestos.titulo,
+                Puestos.descripcion,
+                Puestos.salario,
+                Puestos.prestaciones,
+                Puestos.fecha_publicacion,
+                Empresas.nombre_empresa,
+                Empresas.direccion
+            FROM Puestos 
+            JOIN Empresas ON Puestos.id_empresa = Empresas.id_empresa 
+            WHERE Puestos.id_puesto = ?
+        ";
+    
+        $stmt = $this->conexion->prepare($sql);
+        if (!$stmt) {
+            $this->data = [
+                'success' => false,
+                'message' => 'Error en prepare: ' . $this->conexion->error,
+                'data'    => null
+            ];
+            return $this->data;
+        }
+    
+        $stmt->bind_param("i", $id);
+        if (!$stmt->execute()) {
+            $this->data = [
+                'success' => false,
+                'message' => 'Error en execute: ' . $stmt->error,
+                'data'    => null
+            ];
+            return $this->data;
+        }
+    
+        $res = $stmt->get_result();
+        if ($row = $res->fetch_assoc()) {
+            $this->data = [
+                'success' => true,
+                'message' => 'Puesto encontrado',
+                'data'    => $row
+            ];
+        } else {
+            $this->data = [
+                'success' => false,
+                'message' => 'No existe el puesto',
+                'data'    => null
+            ];
+        }
+    
+        $stmt->close();
+        return $this->data;
+    }
+    
 
     public function getApplications($id) {
         $this->data = array();

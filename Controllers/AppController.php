@@ -82,6 +82,13 @@ class AppController {
         'id'      => $raw['insert_id'] ?? null    // si quieres devolver el ID generado
     ];
     }
+
+    public function editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion): array {
+        $query = new Querys();
+        return $query->editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion);
+    }
+    
+
     public function getReviews($id) {
         $query = new Querys();
         $query->getReviews($id);
@@ -121,8 +128,13 @@ class AppController {
             ]);
         }
     }
-    
 
+    public function getJob($id) {
+        $query = new Querys();
+        $result = $query->getJob($id);  // ya devuelve ['success'=>…, 'data'=>…]
+        return $result;
+    }
+    
     public function getApplications($id){
         $query = new Querys();
         $query->getApplications($id);
