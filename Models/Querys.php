@@ -318,6 +318,51 @@ class Querys extends DataBase{
         return $this->data['success'];
     }
 
+    public function addReview($id_empresa, $id_candidato, $puesto_desempenado, $tiempo_laborado_meses, $comentario, $ambiente_laboral, $prestaciones, $salario, $fecha) {
+        // Reset de data
+    $this->data = [];
+
+    $insertSql = "
+        INSERT INTO Reseñas
+            (id_empresa, id_candidato, puesto_desempenado, tiempo_laborado_meses, comentario, ambiente_laboral, prestaciones, salario, fecha)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ";
+
+    $stmt = $this->conexion->prepare($insertSql);
+    if (!$stmt) {
+        $this->data['success'] = false;
+        $this->data['message'] = "Error en preparación: " . $this->conexion->error;
+        error_log("agregarVacante prepare error: " . $this->conexion->error);
+        return false;
+    }
+
+        $stmt->bind_param(
+            "iisisiiis",
+            $id_empresa,
+            $id_candidato,
+            $puesto_desempenado,
+            $tiempo_laborado_meses,
+            $comentario,
+            $ambiente_laboral,
+            $prestaciones,
+            $salario,
+            $fecha
+        );
+
+        if ($stmt->execute()) {
+            $this->data['success']   = true;
+            $this->data['message']   = "Vacante publicada con éxito";
+            $this->data['insert_id'] = $stmt->insert_id;
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = "Error en ejecución: " . $stmt->error;
+            error_log("agregarVacante execute error: " . $stmt->error);
+        }
+
+        $stmt->close();
+        return $this->data['success'];
+    }
+
     public function editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion) {
         $this->data = [];
     

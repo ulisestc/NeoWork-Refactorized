@@ -56,45 +56,49 @@ $(document).ready(function() {
       let html = '';
       
       if (vacantes.length === 0) {
-          console.log('Array de vacantes está vacío'); // Debug
-          html = '<div class="alert alert-info">No se encontraron vacantes que coincidan con tu búsqueda.</div>';
-      } else {
-          console.log('Procesando', vacantes.length, 'vacantes'); // Debug
-          vacantes.forEach(function(vacante) {
-              html += `
-                  <div class="col">
-                      <div class="card job-card p-3">
-                          <div class="d-flex">
-                              <img src="/NeoWork_Refactorized/assets/img/default-company.png" 
-                                   alt="Logo empresa" 
-                                   class="me-3 rounded">
-                              <div class="flex-grow-1">
-                                  <h5 class="card-title">${escapeHtml(vacante.titulo)}</h5>
-                                  <p class="card-text text-muted">ID Empresa: ${vacante.id_empresa}</p>
-                                  <p class="card-text"><small class="text-muted">Publicado: ${formatearFecha(vacante.fecha_publicacion)}</small></p>
-                                  <div class="mt-2">
-                                      <span class="badge bg-success me-2">$${formatearSalario(vacante.salario)}</span>
-                                      ${vacante.prestaciones ? `<span class="badge bg-info">${escapeHtml(vacante.prestaciones)}</span>` : ''}
-                                  </div>
-                                  <div class="mt-3">
-                                      <button class="btn btn-primary btn-sm me-2 btn-solicitar" 
-                                              data-id-puesto="${vacante.id_puesto}">
-                                          Solicitar trabajo
-                                      </button>
-                                      <button class="btn btn-outline-secondary btn-sm view-btn" 
-                                              data-id-puesto="${vacante.id_puesto}">
-                                          Ver más
-                                      </button>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              `;
-          });
-      }
+        console.log('Array de vacantes está vacío'); // Debug
+        html = '<div class="alert alert-info">No se encontraron vacantes que coincidan con tu búsqueda.</div>';
+    } else {
+        console.log('Procesando', vacantes.length, 'vacantes'); // Debug
+        vacantes.forEach(function(vacante) {
+            html += `
+                <div class="col">
+                    <div class="card job-card p-3">
+                        <div class="d-flex">
+                            <img src="/NeoWork_Refactorized/assets/img/default-company.png" 
+                                 alt="Logo empresa" 
+                                 class="me-3 rounded">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title">${escapeHtml(vacante.titulo)}</h5>
+                                <p class="card-text text-muted">ID Empresa: ${vacante.id_empresa}</p>
+                                <p class="card-text"><small class="text-muted">Publicado: ${formatearFecha(vacante.fecha_publicacion)}</small></p>
+                                <div class="mt-2">
+                                    <span class="badge bg-success me-2">$${formatearSalario(vacante.salario)}</span>
+                                    ${vacante.prestaciones ? `<span class="badge bg-info">${escapeHtml(vacante.prestaciones)}</span>` : ''}
+                                </div>
+                                <div class="mt-3">
+                                <button class="btn btn-outline-secondary btn-sm btn-ver-detalles" 
+                                    data-id-puesto="${vacante.id_puesto}"
+                                    data-id-empresa="${vacante.id_empresa}">
+                                Ver más
+                              </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
       
       $('#job-listings').html(html);
+
+      $('.btn-ver-detalles').on('click', function() {
+        const idPuesto = $(this).data('id-puesto');
+        const idEmpresa = $(this).data('id-empresa');
+        window.location.href = `/NeoWork_Refactorized/Views/job_details/job_details.php?id_puesto=${idPuesto}&id_empresa=${idEmpresa}`;
+    });
   }
   
   // Función para escapar HTML y prevenir XSS

@@ -1,3 +1,14 @@
+<?php
+  // Capturar parámetros GET
+  $id_puesto  = $_GET['id_puesto'] ?? $_GET['id'] ?? null;
+  $id_empresa = $_GET['id_empresa'] ?? null;
+
+  if (!$id_puesto || !$id_empresa) {
+    // Redirigir si faltan parámetros
+    header('Location: unregistered_user.php');
+    exit;
+  }
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -71,6 +82,21 @@
             </div>
         </div>
 
+        <!-- Bloque para agregar reseña -->
+        <div class="card mb-4">
+        <div class="card-body text-center">
+            <h5 class="card-title">¿Ya trabajaste aquí?</h5>
+            <p class="card-text">Comparte tu opinión con los demás para ayudarlos a tomar mejores decisiones.</p>
+            <button id="btn-agregar-reseña"
+                    class="btn btn-outline-primary"
+                    <?= ($id_puesto && $id_empresa) ? '' : 'disabled' ?>
+                    data-id-puesto="<?= htmlspecialchars($id_puesto) ?>"
+                    data-id-empresa="<?= htmlspecialchars($id_empresa) ?>">
+                <i class="fas fa-building-circle-plus me-2"></i>Agregar Reseña
+            </button>
+        </div>
+        </div>
+
         <!-- Botón de acción -->
         <div class="text-center mb-4">
             <button id="apply-btn" class="btn btn-dark btn-lg">Aplicar al puesto</button>
@@ -82,8 +108,8 @@
     <!-- jQuery + Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
     <!-- Script para cargar datos -->
     <script src="../public/js/job_details.js"></script>
+    <script src="job_details.js"></script>
 </body>
 </html>
