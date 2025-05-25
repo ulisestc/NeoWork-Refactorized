@@ -122,7 +122,33 @@ $(document).ready(function() {
           });
       }
       
-      $('#job-listings').html(html);
+      // Después de insertar el HTML
+$('#job-listings').html(html);
+
+    // Agregar event listener a los botones "Eliminar Vacante"
+    $('.btn-eliminar').on('click', function () {
+        const idPuesto = $(this).data('id-puesto');
+        
+        if (confirm('¿Estás seguro de que quieres eliminar esta vacante?')) {
+            fetch(`/NeoWork_Refactorized/Routes/deleteJob/${idPuesto}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al eliminar la vacante');
+                }
+                // Opcional: Recargar las vacantes después de eliminar
+                alert('Vacante eliminada correctamente');
+                // Aquí puedes volver a cargar la lista o quitar manualmente la tarjeta del DOM
+                // Por ejemplo, podrías volver a llamar a la función que carga las vacantes:
+                cargarVacantes(); // asegúrate de tener esta función definida
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un problema al eliminar la vacante.');
+            });
+        }
+    });
   }
   
   // Función para escapar HTML y prevenir XSS
