@@ -109,7 +109,7 @@ $(document).ready(function() {
                                               data-id-puesto="${vacante.id_puesto}">
                                           Eliminar Vacante
                                       </button>
-                                      <button class="btn btn-outline-secondary btn-sm view-btn" 
+                                      <button class="btn btn-outline-primary btn-sm btn-edit-page" 
                                               data-id-puesto="${vacante.id_puesto}">
                                           Editar
                                       </button>
@@ -123,32 +123,59 @@ $(document).ready(function() {
       }
       
       // Después de insertar el HTML
-$('#job-listings').html(html);
+    $('#job-listings').html(html);
 
     // Agregar event listener a los botones "Eliminar Vacante"
     $('.btn-eliminar').on('click', function () {
         const idPuesto = $(this).data('id-puesto');
-        
-        if (confirm('¿Estás seguro de que quieres eliminar esta vacante?')) {
-            fetch(`/NeoWork_Refactorized/Routes/deleteJob/${idPuesto}`, {
-                method: 'DELETE'
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al eliminar la vacante');
-                }
-                // Opcional: Recargar las vacantes después de eliminar
-                alert('Vacante eliminada correctamente');
-                // Aquí puedes volver a cargar la lista o quitar manualmente la tarjeta del DOM
-                // Por ejemplo, podrías volver a llamar a la función que carga las vacantes:
-                cargarVacantes(); // asegúrate de tener esta función definida
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un problema al eliminar la vacante.');
-            });
-        }
+
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción eliminará la vacante permanentemente.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/NeoWork_Refactorized/Routes/deleteJob/${idPuesto}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al eliminar la vacante');
+                    }
+
+                    Swal.fire({
+                        title: '¡Eliminada!',
+                        text: 'La vacante fue eliminada correctamente.',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    cargarVacantes(); // recargar lista de vacantes
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema al eliminar la vacante.',
+                        icon: 'error'
+                    });
+                });
+            }
+        });
     });
+
+    $('.btn-edit-page').on('click', function() {
+        const id = $(this).data('id-puesto');
+        // ajusta la ruta si tu new_vacancy.php no está en raíz
+        window.location.href = `/NeoWork_Refactorized/Views/new_vacancy/new_vacancy.php?edit=true&id=${id}`;
+    });
+
   }
   
   // Función para escapar HTML y prevenir XSS

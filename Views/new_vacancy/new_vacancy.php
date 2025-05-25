@@ -31,6 +31,7 @@
 
   <!-- Icono -->
   <link rel="icon" type="image/x-icon" href="../styles/favicon.ico" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <header class="header">

@@ -26,6 +26,7 @@
       margin-bottom: 20px;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <!-- Oculto: información del candidato logueado -->

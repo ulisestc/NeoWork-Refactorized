@@ -14,7 +14,7 @@ $controller = new AppController();
 
 // Asegúrate de tener este middleware AL PRINCIPIO de tu aplicación Slim
 $app->addBodyParsingMiddleware();
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 error_reporting(E_ALL);
 // Api.php
@@ -180,6 +180,50 @@ $app->post('/agregarVacante', function (Request $request, Response $response, ar
         ->withHeader('Content-Type', 'application/json');
 });
 
+$app->post('/editJob/{id}', function (Request $request, Response $response, $args) use ($controller) {
+    // ✅ Ahora $args está disponible como tercer parámetro
+    $id = (int)$args['id'];
+    $json = $request->getBody()->getContents();
+    $data = json_decode($json, true);
+
+    // Validar JSON
+    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+        $errorResponse = [
+            'success' => false,
+            'message' => 'JSON inválido: ' . json_last_error_msg()
+        ];
+        $response->getBody()->write(json_encode($errorResponse));
+        return $response->withStatus(400)
+                        ->withHeader('Content-Type', 'application/json');
+    }
+
+    $id_empresa       = $data['id_empresa']       ?? null;
+    $titulo           = $data['nombre_vacante']   ?? '';
+    $descripcion      = $data['requerimientos']   ?? '';
+    $salario          = $data['salario']          ?? '';
+    $prestaciones     = $data['prestaciones']     ?? '';
+    $fecha_publicacion = date('Y-m-d H:i:s');
+
+    // ✅ Agregar validación adicional para debug
+    error_log("Editando vacante ID: $id");
+    error_log("Datos recibidos: " . print_r($data, true));
+
+    $controller = new AppController();
+    $result = $controller->editJob(
+        $id,
+        $id_empresa,
+        $titulo,
+        $descripcion,
+        $salario,
+        $prestaciones,
+        $fecha_publicacion
+    );
+
+    $response->getBody()->write(json_encode($result));
+    return $response
+        ->withHeader('Content-Type', 'application/json');
+});
+
 
 $app->get('/getUser/{id}', function (Request $request, Response $response, array $args) use ($controller) {
     $id = $args['id'];
@@ -211,6 +255,18 @@ $app->get('/getJobs', function (Request $request, Response $response) use ($cont
     $response->getBody()->write(json_encode($result));
     return $response->withHeader('Content-Type', 'application/json');
 });
+
+
+
+    $app->get('/getJob/{id}', function (Request $request, Response $response, array $args) use ($controller) {
+        $id = (int)$args['id'];           
+        $result = $controller->getJob($id);
+    
+        $payload = json_encode($result);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    });
+    
 
 $app->get('/getJobsCompany/{id}', function (Request $request, Response $response, array $args) use ($controller) {
     try {
