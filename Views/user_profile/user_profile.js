@@ -58,10 +58,26 @@ $(document).ready(function () {
         });
     }
 
-    function renderUserHeader(name) {
+    /*function renderUserHeader(name) {
         $userContainer.html(`
             <span class="me-2 btn btn-outline-dark">${name || 'Usuario'}</span>
             <a id="logout" href="../login/login.php" class="btn btn-dark">Cerrar sesión</a>
         `);
+    }*/
+    function renderUserHeader(name) {
+        const profileLink = window.USER_ID
+            ? `../user_profile/user_profile.php`
+            : `../login/login.php`;
+
+        $userContainer.html(`
+        <a href="${profileLink}" class="me-2 btn btn-outline-dark">
+            <i class=""></i> ${name}
+        </a>
+        ${window.USER_ID ? `
+            <a id="logout" href="../login/logout.php" class="btn btn-dark">
+                <i class=""></i> Logout
+            </a>
+        ` : ''}
+    `);
     }
 });
