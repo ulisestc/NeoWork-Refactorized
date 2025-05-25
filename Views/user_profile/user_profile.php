@@ -1,10 +1,17 @@
+<?php
+session_start();
+$user_id = isset($_SESSION['id_candidato']) ? $_SESSION['id_candidato'] : null;
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
+    <script>
+        window.USER_ID = <?php echo json_encode($user_id); ?>;
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de usuario</title>
+    <title>Perfil de usuario - NeoWork</title>
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- estilos propios -->
@@ -16,30 +23,42 @@
 </head>
 
 <body>
-    <header>
-        <div><img src="" alt=""></div>
-        <h2><strong>NeoWork</strong></h2>
+    <header class="header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0"><strong>NeoWork</strong></h2>
+        <div id="header-buttons">
+            <!-- Aquí se mostrará el nombre del usuario y el botón de logout -->
+        </div>
     </header>
 
-    <main class="register-container">
-        <div class="img_perfil"><img src="perfil.png" alt=""></div>
-        <div class="register-title">Full Name</div>
+    <main class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="img_perfil mb-3">
+                            <img src="perfil.png" alt="Foto de perfil" class="rounded-circle" width="150">
+                        </div>
+                        <h3 id="user-fullname" class="card-title">Cargando...</h3>
 
-        <!-- Mensajes de estado -->
-        <div id="status-message"></div>
-        <h5 class="form-label">Experiencia</h5>
-        <form id="register-form" method="POST" autocomplete="off">
-
-            <div class="mb-3">
-                <h6 class="form-label">Experiencia en ventas</h6>
-                <p>6 años como agente de ventas en la empresa Technova</p>
+                        <div class="mt-4 text-start">
+                            <h5 class="form-label"><i class="fas fa-briefcase me-2"></i>Experiencia</h5>
+                            <div class="mb-3">
+                                <h6 class="form-label">Experiencia en ventas</h6>
+                                <p>6 años como agente de ventas en la empresa Technova</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
-
-
+        </div>
     </main>
 
-    <?php include '..\templates\footer.php' ?>
+    <?php include '../templates/footer.php' ?>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Script para cargar los datos del usuario -->
+    <script src="user_profile.js"></script>
 </body>
 
 </html>
