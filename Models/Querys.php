@@ -563,7 +563,8 @@ class Querys extends DataBase{
             SELECT 
                 Puestos.*, 
                 Empresas.nombre_empresa, 
-                Empresas.direccion 
+                Empresas.direccion,
+                Empresas.area 
             FROM Puestos 
             JOIN Empresas ON Puestos.id_empresa = Empresas.id_empresa 
             ORDER BY Puestos.fecha_publicacion DESC

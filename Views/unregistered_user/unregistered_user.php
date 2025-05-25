@@ -26,29 +26,25 @@
         <div class="row justify-content-center mb-4">
             <div class="col-md-8">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Buscar por puesto, empresa o palabras clave">
+                    <input type="text" class="form-control" placeholder="Buscar por puesto, empresa o palabras clave" value="">
                     <button class="btn btn-dark" type="button"><i class="fas fa-search"></i> Buscar</button>
                 </div>
             </div>
         </div>
 
-        <div class="row mb-4">
+        <div class="row mb-4" id="filters">
             <div class="col-12">
                 <div class="filters-container">
                     <select class="form-select">
-                        <option value="" disabled selected hidden>Área</option>
-                        <option value="Tecnología">Tecnología</option>
-                        <option value="Salud">Salud</option>
+                        <option value="">Todas las áreas</option>
                     </select>
                     <select class="form-select">
-                        <option value="" disabled selected hidden>Ubicación</option>
-                        <option value="Remoto">Remoto</option>
-                        <option value="CDMX">CDMX</option>
+                        <option value="">Todas las ubicaciones</option>
+
                     </select>
                     <select class="form-select">
-                        <option value="" disabled selected hidden>Salario</option>
-                        <option value="10000">+$10,000</option>
-                        <option value="20000">+$20,000</option>
+                        <option value="">Todos los salarios</option>
+
                     </select>
                 </div>
             </div>
@@ -69,10 +65,10 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info mt-4">
-                    <i class="fas fa-info-circle"></i> Regístrate para aplicar a empleos.
-                    <a href="../register_user/register_user.php" class="alert-link">Crear cuenta</a>
-                </div>
+            </div>
+            <div class="alert alert-info mt-4">
+                <i class="fas fa-info-circle"></i> Regístrate para aplicar a empleos.
+                <a href="../register_user/register_user.php" class="alert-link">Crear cuenta</a>
             </div>
         </div>
     </main>
