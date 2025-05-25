@@ -1,52 +1,38 @@
-$(document).ready(function () {
-    const $userContainer = $('#header-buttons');
-    const $userFullname = $('#user-fullname');
+$(document).ready(function() {
+    console.log('ID de usuario:', window.USER_ID);
+    $Name = $('#Nombre_Completo');
+    $Email = $('#correo');
+    $Age = $('#edad');
+    $Date = $('#fecha_registro');
 
-    // Cargar información del usuario
     loadUser();
+    // renderUser(window.USER_NAME);
 
     function loadUser() {
-        if (!window.USER_ID) {
-            window.location.href = '../login/login.php';
-            return;
-        }
-
         $.ajax({
             url: `http://localhost/NeoWork_Refactorized/Routes/getUser/${window.USER_ID}`,
             type: 'GET',
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 console.log('Respuesta completa del backend:', response);
 
                 // Validar que success está presente y es true
                 if (response && response.success === true) {
-                    // Acceder al primer elemento del array de respuesta
+                    // Directly access the user object using the key "0"
                     const user = response[0];
 
                     if (user) {
                         console.log('Usuario recibido:', user);
-
-                        // Mostrar nombre completo en el header
-                        renderUserHeader(user.nombre, user.apellidos);
-
-                        // Mostrar nombre completo en el perfil
-                        if (user.nombre && user.apellidos) {
-                            $userFullname.text(`${user.nombre} ${user.apellidos}`);
-                        } else if (user.nombre) {
-                            $userFullname.text(user.nombre);
-                        } else {
-                            $userFullname.text('Usuario');
-                        }
+                        renderUser(user);
                     } else {
-                        console.error('No se encontraron datos de usuario:', user);
-                        $userFullname.text('Usuario');
+                        console.error('No se encontró nombre en el objeto de usuario:', user);
                     }
                 } else {
                     console.warn('La respuesta no fue exitosa o success es falso.');
                     $userContainer.html(`<span class="text-danger">No se pudo cargar el usuario.</span>`);
                 }
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('Error en la petición AJAX:', error, xhr.responseJSON);
                 $userContainer.html(`
                     <div class="alert alert-danger">
@@ -58,26 +44,19 @@ $(document).ready(function () {
         });
     }
 
-    /*function renderUserHeader(name) {
-        $userContainer.html(`
-            <span class="me-2 btn btn-outline-dark">${name || 'Usuario'}</span>
-            <a id="logout" href="../login/login.php" class="btn btn-dark">Cerrar sesión</a>
-        `);
-    }*/
-    function renderUserHeader(name) {
-        const profileLink = window.USER_ID
-            ? `../user_profile/user_profile.php`
-            : `../login/login.php`;
-
-        $userContainer.html(`
-        <a href="${profileLink}" class="me-2 btn btn-outline-dark">
-            <i class=""></i> ${name}
-        </a>
-        ${window.USER_ID ? `
-            <a id="logout" href="../login/logout.php" class="btn btn-dark">
-                <i class=""></i> Logout
-            </a>
-        ` : ''}
-    `);
+    function renderUser(user) {
+        console.log('Nombre de usuario:', user.nombre + ' ' + user.apellidos);
+        $Name.html(`${user.nombre} ${user.apellidos}`);
+        $Email.html(`${user.correo}`);
+        $Age.html(`${user.edad}`);
+        // FECHA TO DD/MM/YYYY
+        const fecha = new Date(user.fecha_registro);
+        const fechaLegible = fecha.toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        $Date.html("Registrado el " + fechaLegible);
+        $('#logout').attr('href', '../login/login.php');
     }
 });
