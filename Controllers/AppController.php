@@ -83,6 +83,21 @@ class AppController {
     ];
     }
 
+    public function addReview($id_empresa, $id_candidato, $puesto_desempenado, $tiempo_laborado_meses, $comentario, $ambiente_laboral, $prestaciones, $salario, $fecha
+    ): array {
+        $query = new Querys();
+        $ok = $query->addReview($id_empresa, $id_candidato, $puesto_desempenado, $tiempo_laborado_meses, $comentario, $ambiente_laboral, $prestaciones, $salario, $fecha);
+    
+        // Decodificar la data que generó el Querys
+        $raw = json_decode($query->getData(), true);
+
+    return [
+        'success' => $raw['success'] ?? false,
+        'message' => $raw['message'] ?? 'Error al procesar la solicitud',
+        'id'      => $raw['insert_id'] ?? null    // si quieres devolver el ID generado
+    ];
+    }
+
     public function editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion): array {
         $query = new Querys();
         return $query->editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion);

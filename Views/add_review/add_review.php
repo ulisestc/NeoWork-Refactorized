@@ -1,3 +1,18 @@
+<?php
+session_start();
+$idCandidato = $_SESSION['id_candidato'] ?? null;
+if (!$idCandidato) {
+    header('Location: /NeoWork_Refactorized/Views/login/login.php');
+    exit;
+}
+
+// Capturar parámetros de la URL
+$id_puesto  = $_GET['id_puesto']  ?? null;
+$id_empresa = $_GET['id_empresa'] ?? null;
+if (!$id_puesto || !$id_empresa) {
+    die('Faltan parámetros necesarios para agregar reseña.');
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,22 +22,26 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="styles/styles.css" />
-    <style>
-        
-    </style>
 </head>
 <body>
+    <!-- Datos ocultos para el JS -->
+    <div id="empresa-info" 
+         data-id-candidato="<?= htmlspecialchars($idCandidato) ?>" 
+         data-id-empresa="<?= htmlspecialchars($id_empresa) ?>"
+         style="display:none;">
+    </div>
+
     <div class="main-container">
         <div class="form-card">
             <div class="logo">NeoWork</div>
-            
             <h2 class="form-title">Calificar esta empresa</h2>
             
             <form id="ratingForm">
                 <!-- Puesto desempeñado -->
                 <div class="form-group">
                     <label class="form-label" for="puesto">Puesto desempeñado</label>
-                    <input type="text" class="form-control" id="puesto" name="puesto" placeholder="Ej: Desarrollador Frontend" required>
+                    <input type="text" class="form-control" id="puesto" name="puesto" 
+                           placeholder="Ej: Desarrollador Frontend" required>
                 </div>
                 
                 <!-- Meses laborados -->
@@ -36,67 +55,58 @@
                 <!-- Comentario -->
                 <div class="form-group">
                     <label class="form-label" for="comentario">Reseña</label>
-                    <textarea class="form-control" id="comentario" name="comentario" rows="4" placeholder="Comparte tu experiencia trabajando en esta empresa..." required></textarea>
+                    <textarea class="form-control" id="comentario" name="comentario" rows="4" 
+                              placeholder="Comparte tu experiencia trabajando en esta empresa..." required></textarea>
                 </div>
                 
-                <!-- Calificaciones -->
+                <!-- Sistema de calificaciones -->
                 <div class="rating-section">
                     <div class="rating-title">Califica tu experiencia</div>
                     
                     <!-- Ambiente laboral -->
                     <div class="rating-row">
                         <div class="rating-label">
-                            <i class="fas fa-smile"></i>
-                            Ambiente laboral
+                            <i class="fas fa-smile"></i> Ambiente laboral
                         </div>
                         <div class="stars" data-rating="ambiente">
-                            <i class="fas fa-star star" data-value="1"></i>
-                            <i class="fas fa-star star" data-value="2"></i>
-                            <i class="fas fa-star star" data-value="3"></i>
-                            <i class="fas fa-star star" data-value="4"></i>
-                            <i class="fas fa-star star" data-value="5"></i>
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <i class="fas fa-star star" data-value="<?= $i ?>"></i>
+                            <?php endfor; ?>
                         </div>
                     </div>
                     
                     <!-- Prestaciones -->
                     <div class="rating-row">
                         <div class="rating-label">
-                            <i class="fas fa-medal"></i>
-                            Prestaciones
+                            <i class="fas fa-medal"></i> Prestaciones
                         </div>
                         <div class="stars" data-rating="prestaciones">
-                            <i class="fas fa-star star" data-value="1"></i>
-                            <i class="fas fa-star star" data-value="2"></i>
-                            <i class="fas fa-star star" data-value="3"></i>
-                            <i class="fas fa-star star" data-value="4"></i>
-                            <i class="fas fa-star star" data-value="5"></i>
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <i class="fas fa-star star" data-value="<?= $i ?>"></i>
+                            <?php endfor; ?>
                         </div>
                     </div>
                     
                     <!-- Salario -->
                     <div class="rating-row">
                         <div class="rating-label">
-                            <i class="fas fa-coins"></i>
-                            Salario
+                            <i class="fas fa-coins"></i> Salario
                         </div>
                         <div class="stars" data-rating="salario">
-                            <i class="fas fa-star star" data-value="1"></i>
-                            <i class="fas fa-star star" data-value="2"></i>
-                            <i class="fas fa-star star" data-value="3"></i>
-                            <i class="fas fa-star star" data-value="4"></i>
-                            <i class="fas fa-star star" data-value="5"></i>
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <i class="fas fa-star star" data-value="<?= $i ?>"></i>
+                            <?php endfor; ?>
                         </div>
                     </div>
                 </div>
                 
                 <button type="submit" class="submit-btn">
-                    <i class="fas fa-paper-plane me-2"></i>
-                    Enviar
+                    <i class="fas fa-paper-plane me-2"></i> Enviar
                 </button>
             </form>
         </div>
     </div>
-    
+
     <footer>
         <div><strong>NeoWork</strong></div>
         <div>
@@ -114,93 +124,8 @@
         </div>
     </footer>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Sistema de calificación por estrellas
-        const ratings = {
-            ambiente: 0,
-            prestaciones: 0,
-            salario: 0
-        };
-
-        // Manejar clics en las estrellas
-        document.querySelectorAll('.stars').forEach(starsContainer => {
-            const ratingType = starsContainer.getAttribute('data-rating');
-            const stars = starsContainer.querySelectorAll('.star');
-            
-            stars.forEach((star, index) => {
-                star.addEventListener('click', () => {
-                    const rating = index + 1;
-                    ratings[ratingType] = rating;
-                    
-                    // Actualizar visualización de estrellas
-                    stars.forEach((s, i) => {
-                        s.classList.toggle('active', i < rating);
-                    });
-                });
-                
-                // Efecto hover
-                star.addEventListener('mouseenter', () => {
-                    stars.forEach((s, i) => {
-                        s.style.color = i <= index ? '#ffc107' : '#ddd';
-                    });
-                });
-            });
-            
-            // Restaurar colores al salir del hover
-            starsContainer.addEventListener('mouseleave', () => {
-                stars.forEach((s, i) => {
-                    s.style.color = i < ratings[ratingType] ? '#ffc107' : '#ddd';
-                });
-            });
-        });
-
-        // Manejar envío del formulario
-        document.getElementById('ratingForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Validar que todas las calificaciones estén hechas
-            const requiredRatings = ['ambiente', 'prestaciones', 'salario'];
-            const missingRatings = requiredRatings.filter(rating => ratings[rating] === 0);
-            
-            if (missingRatings.length > 0) {
-                alert('Por favor, califica todos los aspectos antes de enviar.');
-                return;
-            }
-            
-            // Recopilar datos del formulario
-            const formData = {
-                puesto: document.getElementById('puesto').value,
-                meses: document.getElementById('meses').value,
-                comentario: document.getElementById('comentario').value,
-                ambiente_laboral: ratings.ambiente,
-                prestaciones: ratings.prestaciones,
-                salario: ratings.salario
-            };
-            
-            console.log('Datos a enviar:', formData);
-            
-            // Aquí iría la lógica para enviar los datos al servidor
-            alert('¡Gracias por tu reseña! Tu opinión es muy valiosa.');
-            
-        });
-
-        // Validación en tiempo real
-        document.querySelectorAll('input, select, textarea').forEach(field => {
-            field.addEventListener('blur', () => {
-                if (field.hasAttribute('required') && !field.value.trim()) {
-                    field.classList.add('is-invalid');
-                } else {
-                    field.classList.remove('is-invalid');
-                }
-            });
-            
-            field.addEventListener('input', () => {
-                if (field.classList.contains('is-invalid') && field.value.trim()) {
-                    field.classList.remove('is-invalid');
-                }
-            });
-        });
-    </script>
+    <script src="add_review.js"></script>
 </body>
 </html>

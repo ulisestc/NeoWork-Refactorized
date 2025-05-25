@@ -14,7 +14,7 @@ $controller = new AppController();
 
 // Asegúrate de tener este middleware AL PRINCIPIO de tu aplicación Slim
 $app->addBodyParsingMiddleware();
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 error_reporting(E_ALL);
 // Api.php
@@ -180,8 +180,51 @@ $app->post('/agregarVacante', function (Request $request, Response $response, ar
         ->withHeader('Content-Type', 'application/json');
 });
 
+$app->post('/addReview', function (Request $request, Response $response, array $args) {
+    $json = $request->getBody()->getContents();
+    $data = json_decode($json, true);
+
+    // Validar JSON
+    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+        $errorResponse = [
+            'success' => false,
+            'message' => 'JSON inválido: ' . json_last_error_msg()
+        ];
+        $response->getBody()->write(json_encode($errorResponse));
+        return $response->withStatus(400)
+                        ->withHeader('Content-Type', 'application/json');
+    }
+
+    $id_empresa       = $data['id_empresa'];
+    $id_candidato     = $data['id_candidato'];
+    $puesto_desempenado = $data['puesto_desempenado'];
+    $tiempo_laborado_meses = $data['tiempo_laborado_meses'];
+    $comentario = $data['comentario'];
+    $ambiente_laboral  = $data['ambiente_laboral'];
+    $prestaciones     = $data['prestaciones'];
+    $salario     = $data['salario'];
+    $fecha = date('Y-m-d H:i:s');
+
+    $controller = new AppController();
+    $result = $controller->addReview(
+        $id_empresa,
+        $id_candidato,
+        $puesto_desempenado,
+        $tiempo_laborado_meses,
+        $comentario,
+        $ambiente_laboral,
+        $prestaciones,
+        $salario,
+        $fecha
+    );
+
+    $response->getBody()->write(json_encode($result));
+    return $response
+        ->withHeader('Content-Type', 'application/json');
+});
+
 $app->post('/editJob/{id}', function (Request $request, Response $response, $args) use ($controller) {
-    // ✅ Ahora $args está disponible como tercer parámetro
+    
     $id = (int)$args['id'];
     $json = $request->getBody()->getContents();
     $data = json_decode($json, true);
@@ -204,7 +247,6 @@ $app->post('/editJob/{id}', function (Request $request, Response $response, $arg
     $prestaciones     = $data['prestaciones']     ?? '';
     $fecha_publicacion = date('Y-m-d H:i:s');
 
-    // ✅ Agregar validación adicional para debug
     error_log("Editando vacante ID: $id");
     error_log("Datos recibidos: " . print_r($data, true));
 
