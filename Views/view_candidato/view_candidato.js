@@ -56,7 +56,7 @@ $(document).ready(function() {
     function renderUser(name) {
         console.log('Nombre de usuario:', name);
         $userContainer.html(`
-            <span class="me-2 btn btn-outline-dark">${name}</span>
+            <a id="logout" href="../user_profile/user_profile.php" class="btn btn-outline-dark">${name}</a>
             <a id="logout" href="../login/login.php" class="btn btn-dark">Logout</a>
         `);
     }

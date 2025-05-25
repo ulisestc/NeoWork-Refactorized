@@ -64,7 +64,7 @@ $(document).ready(function() {
 
         // Llamada AJAX al endpoint del API
         $.ajax({
-            url: `http://localhost:8080/NeoWork_Refactorized/Routes/getJobs`,
+            url: `http://localhost/NeoWork_Refactorized/Routes/getJobs`,
             type: 'GET',
             dataType: 'json',
             success: function(response) {
