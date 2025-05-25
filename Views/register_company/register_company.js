@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
           statusMessage.innerHTML = '<div class="alert alert-info">Procesando registro...</div>';
           
           // Realizar petición AJAX a la API
-          fetch('http://localhost:8080/NeoWork_Refactorized/Routes/registerCompany', {
+          fetch('http://localhost/NeoWork_Refactorized/Routes/registerCompany', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
