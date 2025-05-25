@@ -6,29 +6,17 @@
     exit;
   }
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>NeoWork - Vacantes</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
-  <style>
-    body { padding-top: 70px; }
-    .job-card img { width: 100px; height: 100px; object-fit: cover; }
-    .search-bar { max-width: 600px; }
-    .btn-add-vacante {
-      position: relative;
-      float: right;
-      margin-bottom: 20px;
-    }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
+<
+
 <body>
+  <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- estilos propios -->
+    <link rel="stylesheet" type="text/css" href="../styles/styles.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- icon -->
+    <link rel="icon" type="image/x-icon" href="../styles/favicon.ico">
   <!-- Oculto: información del candidato logueado -->
   <div id="empresa-info" data-id-empresa="<?= htmlspecialchars($idEmpresa) ?>" style="display:none;"></div>
 
