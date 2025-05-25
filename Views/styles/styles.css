@@ -278,3 +278,31 @@ textarea {
         justify-content: center;
     }
 }
+
+/* Estilos para job_details.php */
+.detail-box {
+    background-color: #f8f9fa;
+    height: 100%;
+}
+
+.detail-box h5 {
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.review-item, .comment-item {
+    background-color: #f8f9fa;
+}
+
+.rating {
+    color: #ffc107;
+}
+
+#apply-btn {
+    padding: 10px 30px;
+    font-size: 1.2rem;
+}
+
+.text-justify {
+    text-align: justify;
+}
