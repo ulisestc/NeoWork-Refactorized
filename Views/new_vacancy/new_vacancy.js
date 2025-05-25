@@ -5,17 +5,16 @@ $(document).ready(function() {
     if ($jobForm.length) {
         $jobForm.on('submit', function(e) {
             e.preventDefault();
-            
             // Limpiar mensajes anteriores
             $statusMessage.html('');
-            
-            // Validación básica
-            const salary = $('#salario').val();
-            if (!salary.includes('$')) {
+
+            const salary = $('#salario').val().trim();
+            const decimalPattern = /^\d+(?:\.\d+)?$/;
+            if (!decimalPattern.test(salary)) {
                 $statusMessage.html(`
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        Formato de salario incorrecto. Ejemplo: $15,000 - $20,000
+                        Formato de salario incorrecto. Debe ser un número decimal, por ejemplo: 20.0 o 15000.50
                     </div>
                 `);
                 return;
@@ -23,9 +22,9 @@ $(document).ready(function() {
 
             // Recoger datos del formulario
             const formData = {
+                id_empresa: $('#empresa-info').data('id-empresa'),
                 nombre_vacante: $('#nombre_vacante').val(),
                 salario: salary,
-                area: $('#area').val(),
                 prestaciones: $('#prestaciones').val(),
                 requerimientos: $('#requerimientos').val()
             };
@@ -34,7 +33,12 @@ $(document).ready(function() {
             console.log('Datos a enviar:', formData);
 
             // Mostrar loader
-            $statusMessage.html('<div class="alert alert-info">Publicando vacante...</div>');
+            $statusMessage.html(`
+                <div class="alert alert-info">
+                    <i class="fas fa-spinner fa-spin me-2"></i>
+                    Publicando vacante...
+                </div>
+            `);
 
             // Llamada AJAX al endpoint del API
             $.ajax({
@@ -44,7 +48,7 @@ $(document).ready(function() {
                 data: JSON.stringify(formData),
                 success: function(data) {
                     console.log('Respuesta del servidor:', data);
-                    
+
                     if (data.success) {
                         $statusMessage.html(`
                             <div class="alert alert-success">
@@ -56,8 +60,8 @@ $(document).ready(function() {
                     } else {
                         let errorHtml = '<div class="alert alert-danger"><ul class="mb-0">';
                         if (data.errors) {
-                            Object.keys(data.errors).forEach(key => {
-                                errorHtml += `<li>${data.errors[key]}</li>`;
+                            Object.values(data.errors).forEach(msg => {
+                                errorHtml += `<li>${msg}</li>`;
                             });
                         } else {
                             errorHtml += `<li>${data.message || 'Error al publicar la vacante.'}</li>`;
@@ -66,8 +70,8 @@ $(document).ready(function() {
                         $statusMessage.html(errorHtml);
                     }
                 },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
+                error: function(xhr) {
+                    console.error('Error:', xhr);
                     $statusMessage.html(`
                         <div class="alert alert-danger">
                             <i class="fas fa-exclamation-triangle me-2"></i>

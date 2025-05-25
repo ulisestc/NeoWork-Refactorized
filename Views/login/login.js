@@ -72,7 +72,7 @@ $(document).ready(function () {
                     if (company.success === true || company.success === "true") {
                         console.log("🎉 LOGIN EMPRESA EXITOSO - Redirigiendo...");
                         // Redirige a dashboard empresa
-                        window.location.href = '/NeoWork_Refactorized/Views/empresa/dashboard.php';
+                        window.location.href = '/NeoWork_Refactorized/Views/view_company/view_company.php';
                     } else {
                         console.log("❌ LOGIN EMPRESA FALLÓ");
                         showError('Credenciales incorrectas para ambos tipos de cuenta');

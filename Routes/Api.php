@@ -14,8 +14,9 @@ $controller = new AppController();
 
 // Asegúrate de tener este middleware AL PRINCIPIO de tu aplicación Slim
 $app->addBodyParsingMiddleware();
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 ini_set('log_errors', 1);
+error_reporting(E_ALL);
 // Api.php
 $app->post('/loginUser', function (Request $request, Response $response) use ($controller) {
     session_start(); // Iniciar sesión
@@ -33,10 +34,16 @@ $app->post('/loginUser', function (Request $request, Response $response) use ($c
 });
 
 $app->post('/loginCompany', function (Request $request, Response $response) use ($controller) {
+    session_start();
     $params = (array) $request->getParsedBody();
     
     // Llama al método login del controlador
     $result = $controller->loginCom($params['email'], $params['password']);
+
+    if ($result['success']) {
+        $_SESSION['id_empresa'] = $result['user']['id_empresa'];
+        $_SESSION['user_type'] = 'empresa'; // Opcional: para identificar tipo de usuario
+    }
     
     // Escribe la respuesta JSON
     $response->getBody()->write(json_encode($result));
@@ -73,7 +80,7 @@ $app->post('/mandarSolicitud', function (Request $request, Response $response) u
 });
 
 $app->post('/registerUser', function (Request $request, Response $response) {
-    // Para datos JSON, usar getBody() en lugar de getParsedBody()
+
     $json = $request->getBody()->getContents();
     $data = json_decode($json, true);
     
@@ -136,6 +143,44 @@ $app->get('/getReviews/{id}', function (Request $request, Response $response, ar
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+$app->post('/agregarVacante', function (Request $request, Response $response, array $args) {
+    $json = $request->getBody()->getContents();
+    $data = json_decode($json, true);
+
+    // Validar JSON
+    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+        $errorResponse = [
+            'success' => false,
+            'message' => 'JSON inválido: ' . json_last_error_msg()
+        ];
+        $response->getBody()->write(json_encode($errorResponse));
+        return $response->withStatus(400)
+                        ->withHeader('Content-Type', 'application/json');
+    }
+
+    $id_empresa       = $data['id_empresa']       ?? null;
+    $titulo           = $data['nombre_vacante']   ?? '';
+    $descripcion      = $data['requerimientos']   ?? '';
+    $salario          = $data['salario']          ?? '';
+    $prestaciones     = $data['prestaciones']     ?? '';
+    $fecha_publicacion = date('Y-m-d H:i:s');
+
+    $controller = new AppController();
+    $result = $controller->agregarVacante(
+        $id_empresa,
+        $titulo,
+        $descripcion,
+        $salario,
+        $prestaciones,
+        $fecha_publicacion
+    );
+
+    $response->getBody()->write(json_encode($result));
+    return $response
+        ->withHeader('Content-Type', 'application/json');
+});
+
+
 $app->get('/getUser/{id}', function (Request $request, Response $response, array $args) use ($controller) {
     $id = $args['id'];
     
@@ -165,6 +210,52 @@ $app->get('/getJobs', function (Request $request, Response $response) use ($cont
     $result = json_decode($raw, true);          
     $response->getBody()->write(json_encode($result));
     return $response->withHeader('Content-Type', 'application/json');
+});
+
+$app->get('/getJobsCompany/{id}', function (Request $request, Response $response, array $args) use ($controller) {
+    try {
+        // Obtener el ID desde los argumentos de la ruta
+        $id = $args['id'];
+        
+        // Validar que el ID sea válido
+        if (empty($id) || !is_numeric($id)) {
+            $result = [
+                'success' => false,
+                'message' => 'ID de empresa inválido',
+                'data' => []
+            ];
+            $response->getBody()->write(json_encode($result));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        
+        // Llamar al controlador
+        $raw = $controller->getJobsCompany($id);
+        $result = json_decode($raw, true);
+        
+        // Verificar si la decodificación fue exitosa
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $result = [
+                'success' => false,
+                'message' => 'Error al procesar los datos',
+                'data' => []
+            ];
+        }
+        
+        $response->getBody()->write(json_encode($result));
+        return $response->withHeader('Content-Type', 'application/json');
+        
+    } catch (Exception $e) {
+        error_log('Error en getJobsCompany: ' . $e->getMessage());
+        
+        $result = [
+            'success' => false,
+            'message' => 'Error interno del servidor',
+            'data' => []
+        ];
+        
+        $response->getBody()->write(json_encode($result));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+    }
 });
 
 $app->get('/getApplications/{id}', function (Request $request, Response $response, array $args) use ($controller) {

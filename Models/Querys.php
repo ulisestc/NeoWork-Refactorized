@@ -275,6 +275,49 @@ class Querys extends DataBase{
         return $this->data['success'];
     }
 
+    public function agregarVacante($id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion) {
+        // Reset de data
+    $this->data = [];
+
+    // 1) Ajustar placeholders: son 6 columnas -> 6 '?'
+    $insertSql = "
+        INSERT INTO Puestos
+            (id_empresa, titulo, descripcion, salario, prestaciones, fecha_publicacion)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ";
+
+    $stmt = $this->conexion->prepare($insertSql);
+    if (!$stmt) {
+        $this->data['success'] = false;
+        $this->data['message'] = "Error en preparación: " . $this->conexion->error;
+        error_log("agregarVacante prepare error: " . $this->conexion->error);
+        return false;
+    }
+
+        $stmt->bind_param(
+            "isssss",
+            $id_empresa,
+            $titulo,
+            $descripcion,
+            $salario,
+            $prestaciones,
+            $fecha_publicacion
+        );
+
+        if ($stmt->execute()) {
+            $this->data['success']   = true;
+            $this->data['message']   = "Vacante publicada con éxito";
+            $this->data['insert_id'] = $stmt->insert_id;
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = "Error en ejecución: " . $stmt->error;
+            error_log("agregarVacante execute error: " . $stmt->error);
+        }
+
+        $stmt->close();
+        return $this->data['success'];
+    }
+
     public function getReviews($id) {
         $this->data = array();
     
@@ -348,6 +391,85 @@ class Querys extends DataBase{
         }
     
         $this->conexion->close();
+    }
+
+    public function getJobsCompany($id) {
+        $this->data = array();
+        $vacantes = array();
+    
+        if (!$this->conexion) {
+            error_log('Error: No hay conexión a la base de datos');
+            $this->data = array(
+                'success' => false,
+                'message' => 'Error de conexión a la base de datos',
+                'data' => array()
+            );
+            return;
+        }
+    
+        try {
+            // Consulta para obtener todas las vacantes de una empresa específica
+            $query = "SELECT * FROM puestos WHERE id_empresa = ? ORDER BY fecha_publicacion DESC";
+            
+            // Preparar la consulta
+            $stmt = $this->conexion->prepare($query);
+            
+            if (!$stmt) {
+                error_log('Error al preparar la consulta: ' . $this->conexion->error);
+                $this->data = array(
+                    'success' => false,
+                    'message' => 'Error al preparar la consulta de base de datos',
+                    'data' => array()
+                );
+                return;
+            }
+    
+            // Bind parameter
+            $stmt->bind_param("i", $id);
+            
+            // Ejecutar la consulta
+            if (!$stmt->execute()) {
+                error_log('Error al ejecutar la consulta: ' . $stmt->error);
+                $this->data = array(
+                    'success' => false,
+                    'message' => 'Error al ejecutar la consulta',
+                    'data' => array()
+                );
+                $stmt->close();
+                return;
+            }
+    
+            // Obtener los resultados
+            $result = $stmt->get_result();
+            
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $vacantes[] = $row;
+                }
+                
+                $this->data = array(
+                    'success' => true,
+                    'message' => 'Vacantes encontradas exitosamente',
+                    'data' => $vacantes
+                );
+            } else {
+                $this->data = array(
+                    'success' => false,
+                    'message' => 'No se encontraron vacantes para esta empresa',
+                    'data' => array()
+                );
+            }
+            
+            $stmt->close();
+            
+        } catch (Exception $e) {
+            error_log('Error en getJobsCompany: ' . $e->getMessage());
+            $this->data = array(
+                'success' => false,
+                'message' => 'Error interno al procesar la consulta',
+                'data' => array()
+            );
+        }
     }
 
     public function getJobs() {
