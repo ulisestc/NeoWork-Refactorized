@@ -270,14 +270,18 @@ $app->post('/editJob/{id}', function (Request $request, Response $response, $arg
 $app->get('/getUser/{id}', function (Request $request, Response $response, array $args) use ($controller) {
     $id = $args['id'];
     
-    // Llama al método getUser del controlador
     $result = $controller->getUser($id);
-    
-    // Escribe la respuesta JSON
+
+    // Pasar string a jjsoooon D:
+    if (is_string($result)) {
+        $result = json_decode($result, true); // o false si quieres stdClass
+    }
+
     $response->getBody()->write(json_encode($result));
     
     return $response->withHeader('Content-Type', 'application/json');
 });
+
 
 $app->get('/getCompany/{id}', function (Request $request, Response $response, array $args) use ($controller) {
     $id = $args['id'];

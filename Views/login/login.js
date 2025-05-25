@@ -61,7 +61,7 @@ $(document).ready(function () {
             console.log("Intentando login como Empresa...");
             
             $.ajax({
-                url: 'http://localhost:8080/NeoWork_Refactorized/Routes/loginCompany',
+                url: 'http://localhost/NeoWork_Refactorized/Routes/loginCompany',
                 type: 'POST',
                 dataType: 'json',
                 data: payload,
@@ -87,7 +87,7 @@ $(document).ready(function () {
 
         // 1. Primero intenta como Candidato
         $.ajax({
-            url: 'http://localhost:8080/NeoWork_Refactorized/Routes/loginUser',
+            url: 'http://localhost/NeoWork_Refactorized/Routes/loginUser',
             type: 'POST',
             dataType: 'json',
             data: payload,

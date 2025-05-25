@@ -1,34 +1,192 @@
 $(document).ready(function() {
-  $('.btn-solicitar').click(function() {
-    const idPuesto = $(this).data('id-puesto');
-    const idCandidato = $('#candidato-info').data('id-candidato');
+    const $searchInput = $('.input-group input');
+    const $searchButton = $('.input-group button');
+    const $filters = $('.filters-container select');
+    const $jobsContainer = $('#jobs-container');
+    const $userContainer = $('#header-buttons');
 
-    if (!idPuesto || !idCandidato) {
-      alert("Faltan datos del puesto o candidato.");
-      return;
+    console.log(window.USER_ID);
+    // Cargar empleos al iniciar
+    loadJobs();
+    loadUser();
+    // Event listeners
+    $searchInput.on('input', loadJobs);
+    $searchButton.on('click', loadJobs);
+    $filters.on('change', loadJobs);
+
+
+    function loadUser() {
+    $.ajax({
+        url: `http://localhost/NeoWork_Refactorized/Routes/getUser/${window.USER_ID}`,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log('Respuesta completa del backend:', response);
+
+            // Validar que success está presente y es true
+            if (response && response.success === true) {
+                // Directly access the user object using the key "0"
+                const user = response[0];
+
+                if (user && user.nombre) {
+                    console.log('Usuario recibido:', user);
+                    renderUser(user.nombre);
+                } else {
+                    console.error('No se encontró nombre en el objeto de usuario:', user);
+                }
+            } else {
+                console.warn('La respuesta no fue exitosa o success es falso.');
+                $userContainer.html(`<span class="text-danger">No se pudo cargar el usuario.</span>`);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error en la petición AJAX:', error, xhr.responseJSON);
+            $userContainer.html(`
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error al cargar usuario: ${xhr.responseJSON?.message || 'Intenta nuevamente más tarde.'}
+                </div>
+            `);
+        }
+    });
     }
 
-    $.ajax({
-      url: 'http://localhost:8080/NeoWork_Refactorized/Routes/mandarSolicitud',
-      method: 'POST',
-      data: {
-        id_puesto: idPuesto,
-        id_candidato: idCandidato
-      },
-      dataType: 'json',
-      success: function(response) {
-        if (response.success) {
-          alert('¡Solicitud enviada con éxito!');
-        } else {
-          alert('Error: ' + response.message);
+
+
+    function renderUser(name) {
+        console.log('Nombre de usuario:', name);
+        $userContainer.html(`
+            <span class="me-2 btn btn-outline-dark">${name}</span>
+            <a id="logout" href="../login/login.php" class="btn btn-dark">Logout</a>
+        `);
+    }
+
+    function renderJobs(jobs) {
+        if (!jobs || jobs.length === 0) {
+            $jobsContainer.html(`
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No hay empleos que coincidan con tu búsqueda.
+                </div>
+            `);
+            return;
         }
-      },
-      error: function(xhr, status, error) {
-        alert('Error al procesar la solicitud.');
-        console.error(error);
-      }
-    });
-  });
+    
+        const jobsHtml = jobs.map(job => `
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">${job.titulo || 'Título no disponible'}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${job.nombre_empresa || 'Empresa no disponible'}</h6>
+                    <p class="card-text">
+                        <i class="fas fa-map-marker-alt"></i> ${job.direccion || 'Ubicación no disponible'} · 
+                        <i class="fas fa-money-bill-wave"></i> ${job.salario || 'Salario no disponible'}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Publicado ${job.fecha_publicacion ? formatDate(job.fecha_publicacion) : 'Fecha no disponible'}</small>
+                        <a href="../job_details/job_details.php" class="btn btn-sm btn-outline-dark">Ver detalles</a>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    
+        $jobsContainer.html(jobsHtml);
+    }
+    
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('es-MX', options);
+    }
+    
+    function loadJobs() {
+        const filtersData = {
+            search: $searchInput.val(),
+            area: $('.filters-container select:nth-child(1)').val(),
+            location: $('.filters-container select:nth-child(2)').val(),
+            salary: $('.filters-container select:nth-child(3)').val()
+        };
+
+        // Debug: mostrar filtros en consola
+        console.log('Filtros aplicados:', filtersData);
+
+        // Mostrar loader
+        $jobsContainer.html('<div class="alert alert-info">Buscando empleos...</div>');
+
+        // Llamada AJAX al endpoint del API
+        $.ajax({
+            url: `http://localhost/NeoWork_Refactorized/Routes/getJobs`,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                console.log('Respuesta del servidor:', response);
+                if (response.success) {
+                    // GUARDAMOS lista de emplkeos
+                    const jobs = response.data;
+                    // Seleccionamos los filtros
+                    const $areaSelect = $('.filters-container select:nth-child(1)');
+                    const $locationSelect = $('.filters-container select:nth-child(2)');
+                    const $salarySelect = $('.filters-container select:nth-child(3)');
+                    //recordamos valor seleccionado de cada filtro 
+                    const areaValue = $areaSelect.val();
+                    const locationValue = $locationSelect.val();
+                    const salaryValue = $salarySelect.val();
+                    // Limpiamos los selectores para evitar duplicados (bug lista infinita)
+                    $areaSelect.html('<option value="">Todas las áreas</option>');
+                    $locationSelect.html('<option value="">Todas las ubicaciones</option>');
+                    $salarySelect.html('<option value="">Todos los salarios</option>');
+                    // Obtenemos los valores únicos de cada filtro
+                    const areas = new Set();
+                    const locations = new Set();
+                    const salaries = new Set();
+
+                    jobs.forEach(jobs => {
+                        if (jobs.area) areas.add(jobs.area);
+                        if (jobs.direccion) locations.add(jobs.direccion);
+                        if (jobs.salario) salaries.add(jobs.salario);
+                    });
+                    // Metemos los valores únicos en los selectores
+                    areas.forEach(area => $areaSelect.append(`<option value="${area}">${area}</option>`));
+                    locations.forEach(location => $locationSelect.append(`<option value="${location}">${location}</option>`));
+                    salaries.forEach(salary => $salarySelect.append(`<option value="${salary}">+$${parseInt(salary).toLocaleString()}</option>`));
+
+                    // Seleccionamos el valor que eligió el user
+                    $areaSelect.val(areaValue);
+                    $locationSelect.val(locationValue);
+                    $salarySelect.val(salaryValue);
+                    // Filtramos los empleos según los filtros seleccionados
+                    if(filtersData.search!== '' || filtersData.area !== null || filtersData.location !== null || filtersData.salary !== null) {
+                    response.data = response.data.filter(job => {
+                        
+                        const search = filtersData.search?.toLowerCase() || "";
+                        const jobText = Object.values(job).join(" ").toLowerCase();
+
+
+                        return (!filtersData.search || jobText.includes(search)) &&
+                                (!filtersData.area || job.area === filtersData.area) &&
+                                (!filtersData.location || job.direccion === filtersData.location) &&
+                                (!filtersData.salary || job.salario === filtersData.salary);
+                    });
+                }
+                renderJobs(response.data);
+                } else {
+                    console.error('Error: La respuesta del servidor no contiene un array de empleos:', response);
+                    $jobsContainer.html(`
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Error al cargar empleos: Respuesta inesperada del servidor.
+                        </div>
+                    `);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                $jobsContainer.html(`
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error al cargar empleos: ${xhr.responseJSON?.message || 'Intenta nuevamente más tarde.'}
+                    </div>
+                `);
+            }
+        });
+    }
+
 });
-
-
