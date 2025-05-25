@@ -36,35 +36,36 @@
             <div class="col-12">
                 <div class="filters-container">
                     <select class="form-select">
-                        <option selected>Área</option>
-                        <option>Tecnología</option>
-                        <option>Salud</option>
+                        <option value="" disabled selected hidden>Área</option>
+                        <option value="Tecnología">Tecnología</option>
+                        <option value="Salud">Salud</option>
                     </select>
                     <select class="form-select">
-                        <option selected>Ubicación</option>
-                        <option>Remoto</option>
-                        <option>CDMX</option>
+                        <option value="" disabled selected hidden>Ubicación</option>
+                        <option value="Remoto">Remoto</option>
+                        <option value="CDMX">CDMX</option>
                     </select>
                     <select class="form-select">
-                        <option selected>Salario</option>
-                        <option>+$10,000</option>
-                        <option>+$20,000</option>
+                        <option value="" disabled selected hidden>Salario</option>
+                        <option value="10000">+$10,000</option>
+                        <option value="20000">+$20,000</option>
                     </select>
                 </div>
             </div>
         </div>
 
+
         <div class="row">
-            <div class="col-md-8 mx-auto">
+            <div class="col-md-8 mx-auto" id="jobs-container">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">Desarrollador Frontend</h5>
+                        <!-- <h5 class="card-title">Desarrollador Frontend</h5>
                         <h6 class="card-subtitle mb-2 text-muted">TechSolutions S.A.</h6>
                         <p class="card-text"><i class="fas fa-map-marker-alt"></i> Remoto · <i class="fas fa-money-bill-wave"></i> $18,000 - $22,000</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <small class="text-muted">Publicado hace 2 días</small>
                             <a href="../login/login.php" class="btn btn-sm btn-outline-dark">Ver detalles</a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 

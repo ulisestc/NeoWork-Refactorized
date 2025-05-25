@@ -487,7 +487,16 @@ class Querys extends DataBase{
             return;
         }
         
-        $query = "SELECT * FROM puestos ORDER BY fecha_publicacion DESC";
+        $query = "
+            SELECT 
+                Puestos.*, 
+                Empresas.nombre_empresa, 
+                Empresas.direccion 
+            FROM Puestos 
+            JOIN Empresas ON Puestos.id_empresa = Empresas.id_empresa 
+            ORDER BY Puestos.fecha_publicacion DESC
+        ";
+
         $result = $this->conexion->query($query);
         
         // DEBUG: Log de la query
