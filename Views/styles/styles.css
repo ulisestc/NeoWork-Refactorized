@@ -234,6 +234,14 @@ textarea {
     color: #000;
 }
 
+/*imagen de perfil*/
+
+
+.img_perfil img {
+    width: 12rem;
+    height: 12rem;
+}
+
 /* responsive */
 @media (max-width: 768px) {
     .job-container {
@@ -251,6 +259,7 @@ textarea {
 }
 
 @media (max-width: 576px) {
+
     .register-container,
     .login-container {
         margin: 1.5rem auto;
@@ -270,7 +279,7 @@ textarea {
         text-align: center;
     }
 
-    footer > div {
+    footer>div {
         margin-bottom: 0.5rem;
     }
 
