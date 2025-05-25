@@ -1,8 +1,12 @@
+/* Estilos globales */
 body {
   background-color: #f8f9fa;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
+/* Contenedor principal centrado verticalmente */
 .main-container {
   min-height: 100vh;
   display: flex;
@@ -11,8 +15,9 @@ body {
   padding: 20px;
 }
 
+/* Tarjeta del formulario */
 .form-card {
-  background: white;
+  background: #fff;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   padding: 2.5rem;
@@ -21,6 +26,7 @@ body {
   border: 1px solid #e3e6f0;
 }
 
+/* Logo y título */
 .logo {
   font-size: 1.8rem;
   font-weight: bold;
@@ -39,6 +45,7 @@ body {
   margin-bottom: 2rem;
 }
 
+/* Grupos de formulario */
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -67,6 +74,7 @@ body {
   border-color: #e74a3b;
 }
 
+/* Sección de calificaciones */
 .rating-section {
   background: #f8f9fc;
   border-radius: 10px;
@@ -100,6 +108,7 @@ body {
   gap: 0.5rem;
 }
 
+/* Estrellas */
 .stars {
   display: flex;
   gap: 0.25rem;
@@ -112,12 +121,16 @@ body {
   transition: all 0.2s ease;
 }
 
-.star:hover,
+.star.hover,
 .star.active {
   color: #ffc107;
+}
+
+.star.active {
   transform: scale(1.1);
 }
 
+/* Botón de envío */
 .submit-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
@@ -125,7 +138,7 @@ body {
   padding: 0.875rem;
   font-weight: 600;
   font-size: 1rem;
-  color: white;
+  color: #fff;
   width: 100%;
   transition: all 0.3s ease;
 }
@@ -135,75 +148,32 @@ body {
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  padding: 1rem;
-  text-align: center;
-  border-top: 1px solid #e3e6f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
-.footer-brand {
-  font-weight: 600;
-  color: #333;
+footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #fafafa;
+  border-top: 1px solid #000;
+  gap: 0.7rem;
 }
 
 .footer-links {
   display: flex;
+  justify-content: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
-.footer-links a {
-  color: #666;
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-
-.footer-links a:hover {
-  color: #333;
-}
-
-.social-icons {
+.footer-social {
   display: flex;
+  justify-content: center;
   gap: 0.5rem;
 }
 
-.social-icons a {
-  color: #666;
-  font-size: 1.2rem;
-  transition: color 0.3s ease;
-}
-
-.social-icons a:hover {
-  color: #333;
-}
-
-.copyright {
-  font-size: 0.8rem;
-  color: #999;
-  text-align: center;
-  margin-top: 0.5rem;
-}
-
-@media (max-width: 768px) {
-  .form-card {
-      margin: 1rem;
-      padding: 2rem;
-  }
-  
-  .footer {
-      flex-direction: column;
-      gap: 0.5rem;
-  }
-  
-  .footer-links {
-      flex-wrap: wrap;
-      justify-content: center;
-  }
+copyright {
+  font-size: 0.85rem;
+  color: #555;
 }

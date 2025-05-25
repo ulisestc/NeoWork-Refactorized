@@ -106,24 +106,30 @@ if (!$id_puesto || !$id_empresa) {
             </form>
         </div>
     </div>
-
+    
     <footer>
-        <div><strong>NeoWork</strong></div>
-        <div>
-            <a href="#">Aviso de privacidad</a>
-            <a href="#">Términos y condiciones</a>
-            <a href="#">Mapa de sitio</a>
-        </div>
-        <div class="footer-social">
-            <a href="#" title="Instagram">📸</a>
-            <a href="#" title="Facebook">📘</a>
-            <a href="#" title="Twitter">🐦</a>
-        </div>
-        <div class="footer-copyright">
-            &copy; 2025 NeoWork. All rights reserved.
-        </div>
-    </footer>
+    <!-- Logo / Nombre centrado arriba -->
+    <div><strong>NeoWork</strong></div>
 
+    <!-- Enlaces centrados -->
+    <div class="footer-links">
+        <a href="#">Aviso de privacidad</a>
+        <a href="#">Términos y condiciones</a>
+        <a href="#">Mapa de sitio</a>
+    </div>
+
+    <!-- Redes sociales centradas -->
+    <div class="footer-social">
+        <a href="#" title="Instagram">📸</a>
+        <a href="#" title="Facebook">📘</a>
+        <a href="#" title="Twitter">🐦</a>
+    </div>
+
+    <!-- Copyright centrado al fondo -->
+    <div class="copyright">
+        &copy; 2025 NeoWork. All rights reserved.
+    </div>
+    </footer>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="add_review.js"></script>
