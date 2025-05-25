@@ -71,6 +71,18 @@
             </div>
         </div>
 
+        <!-- Bloque para agregar empresa -->
+<div class="card mb-4">
+    <div class="card-body text-center">
+        <h5 class="card-title">¿Ya trabajaste aquí?</h5>
+        <p class="card-text">Comparte tu opinión con los demás para ayudarlos a tomar mejores decisiones.</p>
+        <a href="/../view_review/view_review.php" class="btn btn-outline-primary">
+            <i class="fas fa-building-circle-plus me-2"></i>Agregar Reseña
+        </a>
+    </div>
+</div>
+
+
         <!-- Botón de acción -->
         <div class="text-center mb-4">
             <button id="apply-btn" class="btn btn-dark btn-lg">Aplicar al puesto</button>
