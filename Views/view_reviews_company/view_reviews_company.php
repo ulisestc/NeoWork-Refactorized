@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar empleos - NeoWork</title>
+    <title>Reseñas de la empresa - NeoWork</title>
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- estilos propios -->
@@ -20,19 +20,17 @@
         <h1>NeoWork</h1>
     </header>
 
-    <main>
-        <section class="company-info">
-            <h2>Nombre de la Empresa</h2>
-            
-        </section>
-
-        <section id="reviews-container">
+    <main class="container py-4">
+        <h2 class="text-center fw-bold mb-4">Reseñas de la empresa</h2>
+        <section id="reviews-container" class="d-flex flex-column gap-4">
             <!-- Reseñas se cargarán con AJAX -->
         </section>
     </main>
 
     <?php include '../templates/footer.php' ?>
 
-    <script src="reviews_company.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="view_reviews_company.js"></script>
 </body>
+
 </html>
