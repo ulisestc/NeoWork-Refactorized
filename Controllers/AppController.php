@@ -15,7 +15,7 @@ class AppController {
     public function loginCom($email, $password) {
         $query = new Querys();
         $query->loginCompany($email, $password);
-        return $query->getData(); // Devolver en lugar de echo
+        return $query->getDataArreglo(); // Devolver en lugar de echo
     }
     
     public function register($nombre, $apellidos, $edad, $sexo, $correo, $contraseña, $fecha) {
@@ -69,6 +69,26 @@ class AppController {
         ];
     }
 
+    public function agregarVacante($id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion): array {
+        $query = new Querys();
+        $ok = $query->agregarVacante($id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion);
+    
+        // Decodificar la data que generó el Querys
+        $raw = json_decode($query->getData(), true);
+
+    return [
+        'success' => $raw['success'] ?? false,
+        'message' => $raw['message'] ?? 'Error al procesar la solicitud',
+        'id'      => $raw['insert_id'] ?? null    // si quieres devolver el ID generado
+    ];
+    }
+
+    public function editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion): array {
+        $query = new Querys();
+        return $query->editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion);
+    }
+    
+
     public function getReviews($id) {
         $query = new Querys();
         $query->getReviews($id);
@@ -93,6 +113,28 @@ class AppController {
         return $query->getData();
     }
 
+    public function getJobsCompany($id) {
+        try {
+            $query = new Querys();
+            $query->getJobsCompany($id);
+            return $query->getData();
+        } catch (Exception $e) {
+            error_log('Error en AppController::getJobsCompany: ' . $e->getMessage());
+            
+            return json_encode([
+                'success' => false,
+                'message' => 'Error al obtener las vacantes de la empresa',
+                'data' => []
+            ]);
+        }
+    }
+
+    public function getJob($id) {
+        $query = new Querys();
+        $result = $query->getJob($id);  // ya devuelve ['success'=>…, 'data'=>…]
+        return $result;
+    }
+    
     public function getApplications($id){
         $query = new Querys();
         $query->getApplications($id);
