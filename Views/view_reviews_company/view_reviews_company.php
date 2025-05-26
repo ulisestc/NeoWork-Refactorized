@@ -43,7 +43,7 @@
                     <!-- Las reseñas se cargarán aquí dinámicamente -->
                 </div>
                 
-                <a id="add-review" href="../grade_company/grade_company.php?company_id=<?php echo $company_id; ?>" class="btn btn-primary">
+                <a id="add-review" href="../add_review/add_review.php?id_empresa=<?php echo $company_id; ?>" class="btn btn-primary">
                     <i class="fas fa-plus me-2"></i>Agregar Reseña
                 </a>
                 <br><br>
