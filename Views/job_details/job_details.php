@@ -100,6 +100,8 @@
         <!-- Botón de acción -->
         <div class="text-center mb-4">
             <button id="apply-btn" class="btn btn-dark btn-lg">Aplicar al puesto</button>
+            <br><br>
+            <a href="../view_candidato/view_candidato.php" class="btn btn-outline-dark btn-lg">Regresar</a>
         </div>
     </main>
 
