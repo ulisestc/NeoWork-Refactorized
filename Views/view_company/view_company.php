@@ -23,7 +23,7 @@
 </head>
 <body>
     <header class="header d-flex justify-content-between align-items-center">
-        <h2 class="mb-0"><strong>NeoWork</strong></h2>
+        <h2 class="mb-0"><a id="headerLogo" href="../../index.php"><strong>NeoWork</strong></a></h2>
         <div id="header-buttons">
             <a id="user" href="../view_profile_company/view_profile_company.php" class="btn btn-outline-dark me-2">USER</a>
             <a id="logout" href="../login/login.php" class="btn btn-dark">Logout</a>

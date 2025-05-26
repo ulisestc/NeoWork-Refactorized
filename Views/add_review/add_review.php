@@ -109,7 +109,7 @@ if (!$id_puesto || !$id_empresa) {
     
     <footer>
     <!-- Logo / Nombre centrado arriba -->
-    <div><strong>NeoWork</strong></div>
+    <div><a id="headerLogo" href="../../index.php"><strong>NeoWork</strong></a></div>
 
     <!-- Enlaces centrados -->
     <div class="footer-links">

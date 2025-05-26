@@ -15,7 +15,7 @@
 </head>
 <body>
     <header class="header">
-        <h2><strong>NeoWork</strong></h2>
+        <h2><a id="headerLogo" href="../../index.php"><strong>NeoWork</strong></a></h2>
     </header>
 
     <main class="login-container">
@@ -45,7 +45,7 @@
     </main>
 
     <footer>
-        <div><strong>NeoWork</strong></div>
+        <div><a id="headerLogo" href="../../index.php"><strong>NeoWork</strong></a></div>
         <div>
             <a href="#">Aviso de privacidad</a>
             <a href="#">Términos y condiciones</a>
