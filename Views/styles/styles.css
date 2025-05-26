@@ -8,7 +8,7 @@ body {
     flex-direction: column;
 }
 
-#headerLogo{
+#headerLogo {
     color: #000;
     text-decoration: none;
 }
@@ -304,7 +304,8 @@ textarea {
     font-size: 1.1rem;
 }
 
-.review-item, .comment-item {
+.review-item,
+.comment-item {
     background-color: #f8f9fa;
 }
 
@@ -348,7 +349,7 @@ body {
     background: white;
     padding: 20px;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin: 20px;
 }
 
@@ -366,7 +367,7 @@ body {
     padding: 15px;
     margin-bottom: 15px;
     border-left: 5px solid #004aad;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .review-card h3 {
@@ -406,14 +407,15 @@ body {
     white-space: nowrap;
 }
 
+
 /* Responsive para filtros */
 @media (max-width: 768px) {
     .filters-container {
         flex-direction: column;
         gap: 10px;
     }
-    
-    .filters-container select, 
+
+    .filters-container select,
     .filters-container #add-job-btn {
         width: 100%;
         margin-left: 0 !important;

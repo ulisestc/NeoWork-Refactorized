@@ -23,6 +23,7 @@ if ($user_type === 'candidato') {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <script>
         window.USER_ID = <?php echo json_encode($user_id); ?>;
@@ -40,6 +41,7 @@ if ($user_type === 'candidato') {
     <!-- icon -->
     <link rel="icon" type="image/x-icon" href="../styles/favicon.ico">
 </head>
+
 <body>
     <header class="header">
         <h2><a id="headerLogo" href="../../index.php"><strong>NeoWork</strong></a></h2>
@@ -111,13 +113,9 @@ if ($user_type === 'candidato') {
             <div class="card-body text-center">
                 <h5 class="card-title">¿Ya trabajaste aquí?</h5>
                 <p class="card-text">Comparte tu opinión con los demás para ayudarlos a tomar mejores decisiones.</p>
-                <button id="btn-agregar-reseña"
-                        class="btn btn-outline-primary"
-                        <?= ($id_puesto && $id_empresa) ? '' : 'disabled' ?>
-                        data-id-puesto="<?= htmlspecialchars($id_puesto) ?>"
-                        data-id-empresa="<?= htmlspecialchars($id_empresa) ?>">
+                <a href="../add_review/add_review.php?id_puesto=<?= $id_puesto ?>&id_empresa=<?= $id_empresa ?>" class="btn btn-outline-primary">
                     <i class="fas fa-building-circle-plus me-2"></i>Agregar Reseña
-                </button>
+                </a>
             </div>
         </div>
 
@@ -143,23 +141,26 @@ if ($user_type === 'candidato') {
 
     <!-- Script de aplicación al puesto -->
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             const userId = window.USER_ID;
             const userType = window.USER_TYPE;
             const jobId = new URLSearchParams(window.location.search).get('id_puesto') || new URLSearchParams(window.location.search).get('id');
 
             if (userType === 'candidato') {
-                $('#apply-btn').on('click', function () {
+                $('#apply-btn').on('click', function() {
                     $.ajax({
                         url: 'http://localhost/NeoWork_Refactorized/Routes/aplicaratrabajo',
                         type: 'POST',
                         contentType: 'application/json',
-                        data: JSON.stringify({ id_puesto: jobId, id_candidato: userId }),
-                        success: function () {
+                        data: JSON.stringify({
+                            id_puesto: jobId,
+                            id_candidato: userId
+                        }),
+                        success: function() {
                             $('#applied-label').show();
                             $('#apply-btn').prop('disabled', true);
                         },
-                        error: function () {
+                        error: function() {
                             alert('Error al aplicar. Intenta nuevamente.');
                         }
                     });
@@ -170,4 +171,5 @@ if ($user_type === 'candidato') {
         });
     </script>
 </body>
+
 </html>
