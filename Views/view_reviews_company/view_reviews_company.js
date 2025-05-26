@@ -12,81 +12,76 @@ $(document).ready(function() {
 
     loadReviews(companyId);
 
-function loadReviews(companyId) {
-    showLoading();
+    function loadReviews(companyId) {
+        showLoading();
 
-    $.ajax({
-        url: `http://localhost:8080/NeoWork_Refactorized/Routes/getReviews/${companyId}`,
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            console.log('Respuesta completa:', response); // Debug
+        $.ajax({
+            url: `http://localhost:8080/NeoWork_Refactorized/Routes/getReviews/${companyId}`,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                console.log('Respuesta completa:', response); // Debug
 
-            // Adaptación al formato real de la respuesta (índices numéricos)
-            const reseñas = Object.keys(response)
-                .filter(key => !isNaN(parseInt(key)))
-                .map(key => response[key]);
+                const reseñas = Object.keys(response)
+                    .filter(key => !isNaN(parseInt(key)))
+                    .map(key => response[key]);
 
-            if (reseñas.length > 0) {
-                renderReviews(reseñas);
-            } else {
-                showMessage('No hay reseñas disponibles para esta empresa');
+                if (reseñas.length > 0) {
+                    renderReviews(reseñas);
+                } else {
+                    showMessage('No hay reseñas disponibles para esta empresa');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error en la petición:', {
+                    status: status,
+                    error: error,
+                    response: xhr.responseText
+                });
+                showError('Error al cargar reseñas. Intente nuevamente más tarde.');
             }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error en la petición:', {
-                status: status,
-                error: error,
-                response: xhr.responseText
-            });
-            showError('Error al cargar reseñas. Intente nuevamente más tarde.');
-        }
-    });
-}
-
+        });
+    }
 
     function renderReviews(reviews) {
         let html = '';
         
         reviews.forEach(review => {
-            // Asegurar que todos los campos tengan valores por defecto
+            // Asegura que todos los campos tengan valores por defecto
             const tiempoLaborado = formatWorkTime(review.tiempo_laborado_meses || 0);
             const nombreUsuario = review.nombre_usuario || 'Usuario anónimo';
             const puesto = review.puesto_desempenado || 'No especificado';
             const comentario = review.comentario || '';
 
             html += `
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start">
-                            <div class="me-3">
-                                <i class="fas fa-user-circle fa-3x text-secondary"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h5 class="mb-1">${escapeHtml(nombreUsuario)}</h5>
-                                        <p class="mb-1"><strong>Puesto:</strong> ${escapeHtml(puesto)}</p>
-                                    </div>
-                                    <small class="text-muted">${formatDate(review.fecha)}</small>
-                                </div>
-                                
-                                <p class="mb-2"><strong>Tiempo laborado:</strong> ${tiempoLaborado}</p>
-                                
-                                ${comentario ? `<p class="mb-3">${escapeHtml(comentario)}</p>` : ''}
-                                
-                                <div class="rating-section">
-                                    <p class="mb-1"><strong>Ambiente laboral:</strong> 
-                                        ${convertToStars(review.ambiente_laboral)} (${(review.ambiente_laboral * 5).toFixed(1)}/5)
-                                    </p>
-                                    <p class="mb-1"><strong>Prestaciones:</strong> 
-                                        ${convertToStars(review.prestaciones)} (${(review.prestaciones * 5).toFixed(1)}/5)
-                                    </p>
-                                    <p class="mb-1"><strong>Salario:</strong> 
-                                        ${convertToStars(review.salario)} (${(review.salario * 5).toFixed(1)}/5)
-                                    </p>
-                                </div>
-                            </div>
+                <div class="review-card mb-3 p-3 border rounded">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h5 class="mb-1">${escapeHtml(nombreUsuario)}</h5>
+                            <p class="mb-1 text-muted">${escapeHtml(puesto)}</p>
+                        </div>
+                        <small class="text-muted">${formatDate(review.fecha)}</small>
+                    </div>
+                    
+                    <p class="mb-2"><strong>Tiempo laborado:</strong> ${tiempoLaborado}</p>
+                    
+                    ${comentario ? `<div class="mb-3 p-2 bg-light rounded"><p>${escapeHtml(comentario)}</p></div>` : ''}
+                    
+                    <div class="rating-section">
+                        <div class="d-flex align-items-center mb-1">
+                            <span class="me-2"><strong>Ambiente laboral:</strong></span>
+                            ${convertToStars(review.ambiente_laboral)}
+                            <span class="ms-2">(${(review.ambiente_laboral * 5).toFixed(1)}/5)</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-1">
+                            <span class="me-2"><strong>Prestaciones:</strong></span>
+                            ${convertToStars(review.prestaciones)}
+                            <span class="ms-2">(${(review.prestaciones * 5).toFixed(1)}/5)</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="me-2"><strong>Salario:</strong></span>
+                            ${convertToStars(review.salario)}
+                            <span class="ms-2">(${(review.salario * 5).toFixed(1)}/5)</span>
                         </div>
                     </div>
                 </div>
