@@ -1,5 +1,7 @@
 $(document).ready(function() {
     const userId = window.USER_ID;
+    const userType = window.USER_TYPE;
+    console.log('Tipo de usuario:', userType);
     console.log('ID de usuario:', userId);
     const urlParams = new URLSearchParams(window.location.search);
     const jobId = urlParams.get('id_puesto') || urlParams.get('id');
@@ -18,6 +20,19 @@ $(document).ready(function() {
     // const $applyButton = $('#apply-btnn');
 
     loadJob();
+
+    if (userType !== 'candidato') {
+        $('#add-review').hide();
+        $('#apply-btn').hide();
+        $('#add-comment-form').hide();
+        $('#apply_and_back').append(
+            `            <a href="../view_company/view_company.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
+        );
+    }else{
+        $('#apply_and_back').append(
+            `            <a href="../view_candidato/view_candidato.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
+        );
+    }
 
     $('#add-comment-form').on('submit', function (e) {
         e.preventDefault(); // Evitar el envío del formulario por defecto

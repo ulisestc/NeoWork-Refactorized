@@ -1,24 +1,36 @@
 <?php
   // Capturar parámetros GET
-  $id_puesto  = $_GET['id_puesto'] ?? $_GET['id'] ?? null;
-  $id_empresa = $_GET['id_empresa'] ?? null;
-
-  if (!$id_puesto || !$id_empresa) {
-    // Redirigir si faltan parámetros
-    header('Location: unregistered_user.php');
-    exit;
-  }
-?>
+    $id_puesto  = $_GET['id_puesto'] ?? $_GET['id'] ?? null;
+    $id_empresa = $_GET['id_empresa'] ?? null;
+    
+    if (!$id_puesto || !$id_empresa) {
+        // Redirigir si faltan parámetros
+        header('Location: unregistered_user.php');
+        exit;
+    }
+    ?>
 
 <?php
     session_start();
-    $user_id = isset($_SESSION['id_candidato']) ? $_SESSION['id_candidato'] : null;
+
+    $user_type = $_SESSION['user_type'] ?? null;
+
+    if ($user_type === 'candidato') {
+        $user_id = $_SESSION['id_candidato'] ?? null;
+    } elseif ($user_type === 'empresa') {
+        $user_id = $_SESSION['id_empresa'] ?? null;
+    } else {
+        $user_id = null;
+    }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <script>
         window.USER_ID = <?php echo json_encode($user_id); ?>;
+        window.USER_TYPE = <?php echo json_encode($user_type); ?>;
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -99,7 +111,7 @@
         </div>
 
         <!-- Bloque para agregar reseña -->
-        <div class="card mb-4">
+        <div id="add-review" class="card mb-4">
         <div class="card-body text-center">
             <h5 class="card-title">¿Ya trabajaste aquí?</h5>
             <p class="card-text">Comparte tu opinión con los demás para ayudarlos a tomar mejores decisiones.</p>
@@ -114,10 +126,9 @@
         </div>
 
         <!-- Botón de acción -->
-        <div class="text-center mb-4">
+        <div id="apply_and_back" class="text-center mb-4">
             <button id="apply-btn" class="btn btn-dark btn-lg">Aplicar al puesto</button>
             <br><br>
-            <a href="../view_candidato/view_candidato.php" class="btn btn-outline-dark btn-lg">Regresar</a>
         </div>
 
     </main>
