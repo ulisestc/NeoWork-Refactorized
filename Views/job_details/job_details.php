@@ -128,6 +128,7 @@ if ($user_type === 'candidato') {
             <span id="applied-label" style="display: none; color: green; font-weight: bold;">
                 ¡Ya aplicaste a este puesto!
             </span>
+            <br><br>
         </div>
     </main>
 

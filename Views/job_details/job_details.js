@@ -20,6 +20,7 @@ $(document).ready(function() {
 
     loadJob();
 
+    
     if (userType !== 'candidato') {
         $('#add-review').hide();
         $('#apply-btn').hide();
@@ -41,7 +42,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: 'http://localhost/NeoWork_Refactorized/Routes/aplicaratrabajo',
+            url: 'http://localhost/NeoWork_Refactorized/Routes/mandarSolicitud',
             type: 'POST',
             data: JSON.stringify(data),
             contentType: 'application/json',
@@ -49,7 +50,7 @@ $(document).ready(function() {
                 console.log('Aplicación enviada con éxito:', response);
                 $('#applied-label').show(); // Mostrar la etiqueta de "Aplicado"
                 $('#apply-btn').prop('disabled', true); // Deshabilitar el botón
-                alert('Has aplicado con éxito al puesto.');
+                // alert('Has aplicado con éxito al puesto.');
             },
             error: function (xhr, status, error) {
                 console.error('Error al aplicar:', error);
@@ -115,6 +116,20 @@ $(document).ready(function() {
                 const solicitudes = Object.keys(response).filter(key => !isNaN(parseInt(key)));
                 console.log('Solicitudes:', solicitudes.length);
                 $jobApplicationsCount.text(solicitudes.length || '0');
+
+                // checa si el uisuario ya envió solicitud, y desabilita el botón si es verdad
+                let found = false;
+                Object.values(response).forEach(item => {
+                    if (typeof item === 'object' && item.id_candidato == userId) {
+                        found = true;
+                    }
+                });
+
+                if (found) {
+                    $('#applied-label').show();
+                    $('#apply-btn').prop('disabled', true); 
+                }
+    
             },
             error: function(xhr) {
                 console.error('Error al cargar el número de aplicaciones:', xhr);
