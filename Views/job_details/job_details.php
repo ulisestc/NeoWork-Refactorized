@@ -9,9 +9,17 @@
     exit;
   }
 ?>
+
+<?php
+    session_start();
+    $user_id = isset($_SESSION['id_candidato']) ? $_SESSION['id_candidato'] : null;
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script>
+        window.USER_ID = <?php echo json_encode($user_id); ?>;
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Puesto - NeoWork</title>
@@ -78,6 +86,14 @@
                     <div id="comments-container">
                         <!-- Los comentarios se cargarán aquí dinámicamente -->
                     </div>
+                    <!-- Sección para agregar comentario -->
+                    <form id="add-comment-form">
+                        <div class="mb-3">
+                            <label for="comment-text" class="form-label">Comentario</label>
+                            <textarea class="form-control" id="comment-text" name="comment" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar comentario</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -103,6 +119,7 @@
             <br><br>
             <a href="../view_candidato/view_candidato.php" class="btn btn-outline-dark btn-lg">Regresar</a>
         </div>
+
     </main>
 
     <?php include '../templates/footer.php' ?>

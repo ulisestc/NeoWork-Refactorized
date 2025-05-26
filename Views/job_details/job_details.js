@@ -1,5 +1,6 @@
-
 $(document).ready(function() {
+    const userId = window.USER_ID;
+    console.log('ID de usuario:', userId);
     const urlParams = new URLSearchParams(window.location.search);
     const jobId = urlParams.get('id_puesto') || urlParams.get('id');
     const companyId = urlParams.get('id_empresa');
@@ -17,6 +18,39 @@ $(document).ready(function() {
     // const $applyButton = $('#apply-btnn');
 
     loadJob();
+
+    $('#add-comment-form').on('submit', function (e) {
+        e.preventDefault(); // Evitar el envío del formulario por defecto
+
+        const commentData = {
+            id_puesto: jobId,
+            id_candidato: userId, // Asegúrate de contar con este campo oculto en el formulario
+            comment: $('#comment-text').val()  // Renombrado para ajustarse a la API
+        };
+
+        $.ajax({
+            url: 'http://localhost/NeoWork_Refactorized/Routes/addComment', // URL de la API
+            type: 'POST',
+            data: JSON.stringify(commentData), // Convertir los datos a JSON
+            contentType: 'application/json', // Especificar el tipo de contenido
+            success: function (response) {
+                console.log('Comentario enviado con éxito:', response);
+
+                // Mostrar un mensaje de éxito al usuario
+                alert('Comentario enviado con éxito.');
+
+                // Limpiar el formulario
+                $('#add-comment-form')[0].reset();
+
+                // Recargar los comentarios (opcional)
+                loadJob();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al enviar el comentario:', error);
+                alert('Error al enviar el comentario. Intenta nuevamente.');
+            }
+        });
+    });
 
     function loadJob() {
         $.ajax({

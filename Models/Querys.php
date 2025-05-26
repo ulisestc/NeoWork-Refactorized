@@ -792,6 +792,35 @@ class Querys extends DataBase{
         $this->conexion->close();
     }
 
+    public function addComment($id_puesto, $id_candidato, $comentario) {
+        $this->data = array();
+
+        // Consulta con NOW() para establecer la fecha automáticamente
+        $sql = "INSERT INTO comentariospuestos (id_puesto, id_candidato, comentario, fecha) VALUES (?, ?, ?, NOW())";
+
+        if ($stmt = $this->conexion->prepare($sql)) {
+            // i = integer, s = string
+            $stmt->bind_param("iis", $id_puesto, $id_candidato, $comentario);
+
+            if ($stmt->execute()) {
+                $this->data['success'] = true;
+                $this->data['message'] = 'Comentario agregado exitosamente';
+                $this->data['id_comentario'] = $stmt->insert_id; // Opcional: devolver el ID del nuevo comentario
+            } else {
+                $this->data['success'] = false;
+                $this->data['message'] = 'Error al ejecutar la consulta: ' . $stmt->error;
+            }
+
+            $stmt->close();
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = 'Error al preparar la consulta: ' . $this->conexion->error;
+        }
+
+        return $this->data;
+    }
+
+
     
     
 }

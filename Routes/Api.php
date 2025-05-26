@@ -448,5 +448,34 @@ $app->get('/getComments/{id}', function (Request $request, Response $response, a
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+$app->post('/addComment', function (Request $request, Response $response) use ($controller) {
+    $json = $request->getBody()->getContents();
+    $data = json_decode($json, true);
+
+    // Validar JSON
+    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+        $errorResponse = [
+            'success' => false,
+            'message' => 'JSON inválido: ' . json_last_error_msg()
+        ];
+        $response->getBody()->write(json_encode($errorResponse));
+        return $response->withStatus(400)
+                        ->withHeader('Content-Type', 'application/json');
+    }
+
+    $id_puesto = $data['id_puesto'];
+    $id_candidato = $data['id_candidato'];
+    $comment = $data['comment'];
+    $fecha = date('Y-m-d H:i:s');
+
+    // Llama al método addComment del controlador
+    $result = $controller->addComment($id_puesto, $id_candidato, $comment, $fecha);
+
+    // Escribe la respuesta JSON
+    $response->getBody()->write(json_encode($result));
+    
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
 $app->run();
 ?>

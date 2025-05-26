@@ -167,5 +167,11 @@ class AppController {
         $query->deleteJob($id);
         return $query->getData();
     }
+
+    public function addComment($id_puesto, $id_candidato, $comentario, $fecha) {
+        $query = new Querys();
+        $query->addComment($id_puesto, $id_candidato, $comentario, $fecha);
+        return $query->getData();
+    }
 }
 ?>
