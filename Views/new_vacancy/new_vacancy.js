@@ -65,8 +65,8 @@ console.log('ID de la empresa:', companyId);
   
       const payload = {
         id_empresa: companyId,
-        nombre_vacante: $('#nombre_vacante').val(),        // Changed from nombre_vacante
-        requerimientos: $('#requerimientos').val(),   // Changed from requerimientos
+        nombre_vacante: $('#nombre_vacante').val(),    
+        requerimientos: $('#requerimientos').val(),   
         salario: $('#salario').val(),
         prestaciones: $('#prestaciones').val()
       };
@@ -79,9 +79,9 @@ console.log('ID de la empresa:', companyId);
         contentType: 'application/json',
         data: JSON.stringify(payload),
         success: function(response) {
-          console.log('Respuesta del servidor:', response);  // Added for debugging
+          console.log('Respuesta del servidor:', response);  
           if (response.success) {
-            if (confirm('Vacante agregada correctamente.')) {  // Changed message
+            if (confirm('Vacante agregada correctamente.')) { 
               window.location.href = '../view_company/view_company.php';
             }
           } else {

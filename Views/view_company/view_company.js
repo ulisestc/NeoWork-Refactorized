@@ -111,6 +111,7 @@ $(document).ready(function() {
             $('.delete-job').on('click', function(e) {
                 e.preventDefault();
                 const jobId = $(this).data('job-id');
+                console.log('Eliminar vacante con ID:', jobId);
                 deleteJob(jobId);
             });
         }
@@ -121,25 +122,27 @@ $(document).ready(function() {
     }
 
     function deleteJob(jobId) {
-        if (confirm('¿Eliminar permanentemente esta vacante?')) {
-            $.ajax({
-                url: `http://localhost/NeoWork_Refactorized/Routes/deleteJob/${jobId}`,
-                type: 'DELETE',
-                dataType: 'json',
-                success: function(response) {
-                    if (response && response.success) {
-                        alert('Vacante eliminada correctamente');
-                        loadJobs(); // Recargar la lista
-                    } else {
-                        alert('Error al eliminar la vacante');
-                    }
-                },
-                error: function(error) {
-                    console.error('Error al eliminar vacante:', error);
-                    alert('Error al eliminar la vacante');
+        $.ajax({
+            url: `http://localhost/NeoWork_Refactorized/Routes/deleteJob/${jobId}`,
+            type: 'DELETE',
+            // dataType: 'json',
+            success: function(response) {
+                if (response && response.success) {
+                    // alert('Vacante eliminada correctamente');
+                    console.log('Vacante eliminada correctamente:', response);
+                    $('#deleted-label').show().delay(3000).fadeOut();
+                    loadJobs(); // Recargar la lista
+                } else {
+                    // alert('Error al eliminar la vacante');
+                    console.error('Error al eliminar la vacante:', response);
                 }
-            });
-        }
+            },
+            error: function(error) {
+                console.error('Error al eliminar vacante:', error);
+                // alert('Error al eliminar la vacante');
+            }
+        });
+    
     }
 
     function loadJobs() {
@@ -217,7 +220,7 @@ $(document).ready(function() {
                     $jobsContainer.html(`
                         <div class="alert alert-danger">
                             <i class="fas fa-exclamation-triangle me-2"></i>
-                            Error al cargar empleos: Respuesta inesperada del servidor.
+                            No hay empleos disponibles o ocurrió un error al cargar los datos.
                         </div>
                     `);
                 }

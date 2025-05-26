@@ -58,6 +58,9 @@
                     <button id="add-job-btn" class="btn btn-success ms-2">
                         <i class="fas fa-plus"></i> Nueva Vacante
                     </button>
+                    <span id="deleted-label" style="display: none; color: red; font-weight: bold;">
+                        Vacante eliminada exitosamente
+                    </span>
                 </div>
             </div>
         </div>

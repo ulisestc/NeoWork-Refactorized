@@ -384,6 +384,10 @@ $app->delete('/deleteJob/{id}', function (Request $request, Response $response, 
     // Llama al método deleteJob del controlador
     $result = $controller->deleteJob($id);
     
+    if (is_string($result)) {
+        $result = json_decode($result, true); // o false si quieres stdClass
+    }
+
     // Escribe la respuesta JSON
     $response->getBody()->write(json_encode($result));
     
