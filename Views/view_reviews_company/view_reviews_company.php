@@ -1,6 +1,9 @@
+<?php
+session_start();
+$company_id = isset($_GET['id']) ? $_GET['id'] : (isset($_SESSION['id_empresa']) ? $_SESSION['id_empresa'] : null);
+?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,18 +16,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <!-- icon -->
     <link rel="icon" type="image/x-icon" href="../styles/favicon.ico">
+    <script>
+        window.USER_ID = <?php echo json_encode($company_id); ?>;
+    </script>
 </head>
 
 <body>
-    <header class="main-header">
-        <h1>NeoWork</h1>
+    <header class="header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0"><strong>NeoWork</strong></h2>
+        <div id="header-buttons">
+            <a href="../company_profile/company_profile.php" class="btn btn-outline-dark me-2">Mi Perfil</a>
+            <a href="../login/login.php" class="btn btn-dark">Logout</a>
+        </div>
     </header>
 
-    <main class="container py-4">
-        <h2 class="text-center fw-bold mb-4">Reseñas de la empresa</h2>
-        <section id="reviews-container" class="d-flex flex-column gap-4">
-            <!-- Reseñas se cargarán con AJAX -->
-        </section>
+    <main class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Reseñas de la empresa</h2>
+                    <a href="../grade_company/grade_company.php?company_id=<?php echo $company_id; ?>" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Agregar Reseña
+                    </a>
+                </div>
+                
+                <div id="reviews-container">
+                    <!-- Las reseñas se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </div>
     </main>
 
     <?php include '../templates/footer.php' ?>
@@ -32,5 +52,4 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="view_reviews_company.js"></script>
 </body>
-
 </html>
