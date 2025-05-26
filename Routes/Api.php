@@ -292,6 +292,11 @@ $app->get('/getCompany/{id}', function (Request $request, Response $response, ar
     
     // Llama al método getCompany del controlador
     $result = $controller->getCompany($id);
+   
+    // Pasar string a jjsoooon D:
+    if (is_string($result)) {
+        $result = json_decode($result, true); // o false si quieres stdClass
+    }
     
     // Escribe la respuesta JSON
     $response->getBody()->write(json_encode($result));

@@ -1,55 +1,64 @@
-$(document).ready(function () {
-    // Cargar datos de la empresa
-    $.ajax({
-        url: "../../Controllers/get_company_info.php",
-        method: "GET",
-        success: function (data) {
-            const company = JSON.parse(data);
+$(document).ready(function() {
+    console.log('ID de usuario:', window.USER_ID);
+    $Name = $('#Nombre_Completo');
+    $Email = $('#correo');
+    $direction = $('#direction');
+    $Date = $('#fecha_registro');
+    $area = $('#area');
 
-            $("#company-name").text(company.nombre);
-            $("#company-description").text(company.descripcion);
+    loadUser();
+    // renderUser(window.USER_NAME);
 
-            let estrellas = "";
-            for (let i = 1; i <= 5; i++) {
-                if (i <= company.calificacion) {
-                    estrellas += '<i class="fas fa-star"></i>';
+    function loadUser() {
+        $.ajax({
+            url: `http://localhost/NeoWork_Refactorized/Routes/getCompany/${window.USER_ID}`,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                console.log('Respuesta completa del backend:', response);
+
+                // Validar que success está presente y es true
+                if (response && response.success === true) {
+                    // Directly access the user object using the key "0"
+                    const user = response[0];
+
+                    if (user) {
+                        console.log('Usuario recibido:', user);
+                        renderUser(user);
+                    } else {
+                        console.error('No se encontró nombre en el objeto de usuario:', user);
+                    }
                 } else {
-                    estrellas += '<i class="far fa-star"></i>';
+                    console.warn('La respuesta no fue exitosa o success es falso.');
+                    $userContainer.html(`<span class="text-danger">No se pudo cargar el usuario.</span>`);
                 }
-            }
-            $("#company-rating").html(estrellas);
-        },
-        error: function () {
-            $("#company-name").text("Nombre no disponible");
-            $("#company-description").text("No se pudo cargar la descripción.");
-        }
-    });
-
-    // Cargar reseñas
-    $.ajax({
-        url: "../../Controllers/get_reviews.php",
-        method: "GET",
-        success: function (data) {
-            const reviews = JSON.parse(data);
-            if (reviews.length === 0) {
-                $("#reviews-container").html("<p>No hay reseñas disponibles.</p>");
-                return;
-            }
-
-            let html = "";
-            reviews.forEach(review => {
-                html += `
-                    <div class="review-card mb-4 text-start mx-auto" style="max-width: 600px;">
-                        <h5 class="fw-bold">${review.titulo}</h5>
-                        <p><strong>Opinión:</strong> ${review.comentario}</p>
-                        <p><strong>Calificación:</strong> ${review.calificacion}/5</p>
+            },
+            error: function(xhr, status, error) {
+                console.error('Error en la petición AJAX:', error, xhr.responseJSON);
+                $userContainer.html(`
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error al cargar usuario: ${xhr.responseJSON?.message || 'Intenta nuevamente más tarde.'}
                     </div>
-                `;
-            });
-            $("#reviews-container").html(html);
-        },
-        error: function () {
-            $("#reviews-container").html("<p>Error al cargar las reseñas.</p>");
-        }
-    });
+                `);
+            }
+        });
+    }
+
+    function renderUser(user) {
+        console.log('Nombre de usuario:', user.nombre_empresa);
+        $Name.html(`${user.nombre_empresa}`);
+        $Email.html(`${user.correo}`);
+        $direction.html(`${user.direccion || 'No especificado'}`);
+        $area.html(`${user.area || 'No especificado'}`);
+        // FECHA TO DD/MM/YYYY
+        const fecha = new Date(user.fecha_registro);
+        const fechaLegible = fecha.toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        $Date.html("Registrado el " + fechaLegible);
+        $('#logout').attr('href', '../login/login.php');
+    }
 });

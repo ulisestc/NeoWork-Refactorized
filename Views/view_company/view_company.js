@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     function loadUser() {
     $.ajax({
-        url: `http://localhost/NeoWork_Refactorized/Routes/getUser/${window.USER_ID}`,
+        url: `http://localhost/NeoWork_Refactorized/Routes/getCompany/${window.USER_ID}`,
         type: 'GET',
         dataType: 'json',
         success: function(response) {
@@ -31,9 +31,9 @@ $(document).ready(function() {
                 // Directly access the user object using the key "0"
                 const user = response[0];
 
-                if (user && user.nombre) {
+                if (user && user.nombre_empresa) {
                     console.log('Usuario recibido:', user);
-                    renderUser(user.nombre);
+                    renderUser(user.nombre_empresa);
                 } else {
                     console.error('No se encontró nombre en el objeto de usuario:', user);
                 }
@@ -56,7 +56,7 @@ $(document).ready(function() {
 
     function renderUser(name) {
         $userContainer.html(`
-            <a id="user" href="../company_profile/company_profile.php" class="btn btn-outline-dark me-2">${name}</a>
+            <a id="user" href="../view_profile_company/view_profile_company.php" class="btn btn-outline-dark me-2">${name}</a>
             <a id="logout" href="../login/login.php" class="btn btn-dark">Logout</a>
         `);
     }
