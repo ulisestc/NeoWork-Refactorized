@@ -102,7 +102,10 @@ if ($user_type === 'candidato') {
                             <label for="comment-text" class="form-label">Comentario</label>
                             <textarea class="form-control" id="comment-text" name="comment" rows="3" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Enviar comentario</button>
+                        <button type="submit" class="btn btn-primary mb-4">Enviar comentario</button>
+                        <div class="d-flex justify-content-center">
+                            <a href="../view_reviews_company/view_reviews_company.php?id=<?= $id_puesto ?>" class="btn btn-dark ">Ver reseñas de la empresa</a>
+                        </div>
                     </form>
                 </div>
             </div>

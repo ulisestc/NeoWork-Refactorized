@@ -1,17 +1,17 @@
-$(document).ready(function() {
+$(document).ready(function () {
     const $searchInput = $('.input-group input');
     const $searchButton = $('.input-group button');
     const $filters = $('.filters-container select');
     const $jobsContainer = $('#jobs-container');
-    
+
     // Cargar empleos al iniciar
     loadJobs();
-    
+
     // Event listeners
     $searchInput.on('input', loadJobs);
     $searchButton.on('click', loadJobs);
     $filters.on('change', loadJobs);
-    
+
     function renderJobs(jobs) {
         if (!jobs || jobs.length === 0) {
             $jobsContainer.html(`
@@ -22,12 +22,12 @@ $(document).ready(function() {
             `);
             return;
         }
-    
+
         const jobsHtml = jobs.map(job => `
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">${job.titulo || 'Título no disponible'}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">${job.nombre_empresa || 'Empresa no disponible'}</h6>
+                    <a href="../view_reviews_company/view_reviews_company.php?id=${job.id_empresa}"><h6 class="card-subtitle mb-2 text-muted">${job.nombre_empresa || 'Empresa no disponible'}</h6></a>
                     <p class="card-text">
                         <i class="fas fa-map-marker-alt"></i> ${job.direccion || 'Ubicación no disponible'} · 
                         <i class="fas fa-money-bill-wave"></i> ${job.salario || 'Salario no disponible'}
@@ -39,15 +39,15 @@ $(document).ready(function() {
                 </div>
             </div>
         `).join('');
-    
+
         $jobsContainer.html(jobsHtml);
     }
-    
+
     function formatDate(dateString) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('es-MX', options);
     }
-    
+
     function loadJobs() {
         const filtersData = {
             search: $searchInput.val(),
@@ -67,7 +67,7 @@ $(document).ready(function() {
             url: `http://localhost/NeoWork_Refactorized/Routes/getJobs`,
             type: 'GET',
             dataType: 'json',
-            success: function(response) {
+            success: function (response) {
                 console.log('Respuesta del servidor:', response);
                 if (response.success) {
                     // GUARDAMOS lista de emplkeos
@@ -104,20 +104,20 @@ $(document).ready(function() {
                     $locationSelect.val(locationValue);
                     $salarySelect.val(salaryValue);
                     // Filtramos los empleos según los filtros seleccionados
-                    if(filtersData.search!== '' || filtersData.area !== null || filtersData.location !== null || filtersData.salary !== null) {
-                    response.data = response.data.filter(job => {
-                        
-                        const search = filtersData.search?.toLowerCase() || "";
-                        const jobText = Object.values(job).join(" ").toLowerCase();
+                    if (filtersData.search !== '' || filtersData.area !== null || filtersData.location !== null || filtersData.salary !== null) {
+                        response.data = response.data.filter(job => {
+
+                            const search = filtersData.search?.toLowerCase() || "";
+                            const jobText = Object.values(job).join(" ").toLowerCase();
 
 
-                        return (!filtersData.search || jobText.includes(search)) &&
+                            return (!filtersData.search || jobText.includes(search)) &&
                                 (!filtersData.area || job.area === filtersData.area) &&
                                 (!filtersData.location || job.direccion === filtersData.location) &&
                                 (!filtersData.salary || job.salario === filtersData.salary);
-                    });
-                }
-                renderJobs(response.data);
+                        });
+                    }
+                    renderJobs(response.data);
                 } else {
                     console.error('Error: La respuesta del servidor no contiene un array de empleos:', response);
                     $jobsContainer.html(`
@@ -128,7 +128,7 @@ $(document).ready(function() {
                     `);
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Error:', error);
                 $jobsContainer.html(`
                     <div class="alert alert-danger">

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     const userId = window.USER_ID;
     const userType = window.USER_TYPE;
     console.log('Tipo de usuario:', userType);
@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     loadJob();
 
-    
+
     if (userType !== 'candidato') {
         $('#add-review').hide();
         $('#apply-btn').hide();
@@ -28,6 +28,7 @@ $(document).ready(function() {
         $('#apply_and_back').append(
             `<a href="../view_company/view_company.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
         );
+        $('#applied-label').hide();
     } else {
         $('#apply_and_back').append(
             `<a href="../view_candidato/view_candidato.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
@@ -90,7 +91,7 @@ $(document).ready(function() {
         $.ajax({
             url: `http://localhost/NeoWork_Refactorized/Routes/getJob/${jobId}`,
             type: 'GET',
-            success: function(response) {
+            success: function (response) {
                 console.log('Respuesta completa del backend:', response);
                 if (!response) {
                     alert('Puesto no encontrado');
@@ -103,7 +104,7 @@ $(document).ready(function() {
                 $jobBenefits.text(response.data.prestaciones || 'No especificado');
                 $btnReview.prop('disabled', false);
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error('Error al cargar el puesto:', xhr);
                 alert('Error al cargar los detalles del puesto');
             }
@@ -112,7 +113,7 @@ $(document).ready(function() {
         $.ajax({
             url: `http://localhost/NeoWork_Refactorized/Routes/getApplications/${jobId}`,
             type: 'GET',
-            success: function(response) {           
+            success: function (response) {
                 const solicitudes = Object.keys(response).filter(key => !isNaN(parseInt(key)));
                 console.log('Solicitudes:', solicitudes.length);
                 $jobApplicationsCount.text(solicitudes.length || '0');
@@ -120,18 +121,18 @@ $(document).ready(function() {
                 // checa si el uisuario ya envió solicitud, y desabilita el botón si es verdad
                 let found = false;
                 Object.values(response).forEach(item => {
-                    if (typeof item === 'object' && item.id_candidato == userId) {
+                    if (typeof item === 'object' && item.id_candidato == userId && userType === 'candidato') {
                         found = true;
                     }
                 });
 
                 if (found) {
                     $('#applied-label').show();
-                    $('#apply-btn').prop('disabled', true); 
+                    $('#apply-btn').prop('disabled', true);
                 }
-    
+
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error('Error al cargar el número de aplicaciones:', xhr);
                 $jobApplicationsCount.text('Error al cargar');
             }
@@ -140,7 +141,7 @@ $(document).ready(function() {
         $.ajax({
             url: `http://localhost/NeoWork_Refactorized/Routes/getReviews/${companyId}`,
             type: 'GET',
-            success: function(response) {
+            success: function (response) {
                 console.log('Reseñas de la empresa:', response);
                 const reseñas = Object.keys(response)
                     .filter(key => !isNaN(parseInt(key)))
@@ -167,7 +168,7 @@ $(document).ready(function() {
                     $companyReviewsContainer.html('<p>No hay reseñas disponibles.</p>');
                 }
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error('Error al cargar las reseñas de la empresa:', xhr);
                 $companyReviewsContainer.html('<p>Error al cargar las reseñas.</p>');
             }
@@ -177,7 +178,7 @@ $(document).ready(function() {
             url: `http://localhost/NeoWork_Refactorized/Routes/getComments/${jobId}`,
             type: 'GET',
             dataType: 'json',
-            success: function(response) {
+            success: function (response) {
                 console.log('Comentarios del puesto:', response);
                 $commentsContainer.empty();
                 const comentarios = Object.keys(response)
@@ -185,7 +186,7 @@ $(document).ready(function() {
                     .map(key => response[key]);
 
                 console.log('Comentarios filtrados:', comentarios);
-                
+
                 if (comentarios.length > 0) {
                     comentarios.forEach(comment => {
                         const nombreCompleto = `${comment.nombre || ''} ${comment.apellidos || ''}`.trim();
@@ -200,7 +201,7 @@ $(document).ready(function() {
                     $commentsContainer.html('<p>No hay comentarios disponibles.</p>');
                 }
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error('Error al cargar los comentarios:', xhr);
                 $commentsContainer.html('<p>Error al cargar los comentarios.</p>');
             }
