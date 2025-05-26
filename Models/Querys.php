@@ -765,7 +765,12 @@ class Querys extends DataBase{
     public function getReviews($id_empresa) {
         $this->data = array();
     
-        $query = "SELECT * FROM reseñas WHERE id_empresa = $id_empresa";
+        $query = "
+            SELECT r.*, c.nombre, c.apellidos 
+            FROM reseñas r
+            INNER JOIN candidatos c ON r.id_candidato = c.id_candidato
+            WHERE r.id_empresa = $id_empresa
+        ";        
         $result = $this->conexion->query($query);
     
         if ($result) {

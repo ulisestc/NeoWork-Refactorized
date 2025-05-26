@@ -76,7 +76,7 @@ $(document).ready(function() {
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">${job.titulo || 'Título no disponible'}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">${job.nombre_empresa || 'Empresa no disponible'}</h6>
+                    <a href="../view_reviews_company/view_reviews_company.php?id=${job.id_empresa}"><h6 class="card-subtitle mb-2 text-muted">${job.nombre_empresa || 'Empresa no disponible'}</h6></a>
                     <p class="card-text">
                         <i class="fas fa-map-marker-alt"></i> ${job.direccion || 'Ubicación no disponible'} · 
                         <i class="fas fa-money-bill-wave"></i> ${job.salario || 'Salario no disponible'}

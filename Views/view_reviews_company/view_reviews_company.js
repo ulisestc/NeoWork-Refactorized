@@ -2,8 +2,31 @@ $(document).ready(function() {
     // Obtener ID de empresa
     const urlParams = new URLSearchParams(window.location.search);
     const companyId = urlParams.get('id') || window.USER_ID;
+    const user_type = window.USER_TYPE;
+    const userId = window.USER_ID;
 
-    console.log('ID de empresa:', companyId); // Debug
+    console.log('ID de empresa:', companyId); 
+    console.log('Tipo de usuario:', user_type); 
+    console.log('ID de usuario:', userId);
+
+    if (user_type == 'empresa') {
+        $('#add-review').hide();
+        $('#header-buttons').append(
+            `
+        <a href="../view_profile_company/view_profile_company.php" class="btn btn-outline-dark me-2">Mi perfil</a>
+        <a href="../login/login.php" class="btn btn-dark">Logout</a>`)
+        $('#regresar').append(
+            `<a href="../view_company/view_company.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
+        );
+    }else{
+        $('#add-review').show();
+        $('#header-buttons').append(
+            `<a href="../user_profile/user_profile.php" class="btn btn-outline-dark me-2">Mi perfil</a>
+            <a href="../login/login.php" class="btn btn-dark">Logout</a>`);
+        $('#regresar').append(
+            `<a href="../view_candidato/view_candidato.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
+        );
+    }
 
     if (!companyId) {
         showError('No se pudo identificar la empresa');
@@ -16,11 +39,11 @@ $(document).ready(function() {
         showLoading();
 
         $.ajax({
-            url: `http://localhost:8080/NeoWork_Refactorized/Routes/getReviews/${companyId}`,
+            url: `http://localhost/NeoWork_Refactorized/Routes/getReviews/${companyId}`,
             type: 'GET',
             dataType: 'json',
             success: function(response) {
-                console.log('Respuesta completa:', response); // Debug
+                console.log('Respuesta completa:', response);
 
                 const reseñas = Object.keys(response)
                     .filter(key => !isNaN(parseInt(key)))
@@ -49,7 +72,7 @@ $(document).ready(function() {
         reviews.forEach(review => {
             // Asegura que todos los campos tengan valores por defecto
             const tiempoLaborado = formatWorkTime(review.tiempo_laborado_meses || 0);
-            const nombreUsuario = review.nombre_usuario || 'Usuario anónimo';
+            const nombreUsuario = review.nombre+ " " + review.apellidos || 'Usuario anónimo';
             const puesto = review.puesto_desempenado || 'No especificado';
             const comentario = review.comentario || '';
 

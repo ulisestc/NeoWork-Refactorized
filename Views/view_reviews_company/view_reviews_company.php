@@ -1,6 +1,7 @@
 <?php
-session_start();
-$company_id = isset($_GET['id']) ? $_GET['id'] : (isset($_SESSION['id_empresa']) ? $_SESSION['id_empresa'] : null);
+    session_start();
+    $company_id = isset($_GET['id']) ? $_GET['id'] : (isset($_SESSION['id_empresa']) ? $_SESSION['id_empresa'] : null);
+    $user_type = isset($_SESSION['user_type']) ? $_SESSION['user_type'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -18,6 +19,7 @@ $company_id = isset($_GET['id']) ? $_GET['id'] : (isset($_SESSION['id_empresa'])
     <link rel="icon" type="image/x-icon" href="../styles/favicon.ico">
     <script>
         window.USER_ID = <?php echo json_encode($company_id); ?>;
+        window.USER_TYPE = <?php echo json_encode($user_type); ?>;
     </script>
 </head>
 
@@ -25,17 +27,15 @@ $company_id = isset($_GET['id']) ? $_GET['id'] : (isset($_SESSION['id_empresa'])
     <header class="header d-flex justify-content-between align-items-center px-4 py-3">
         <h2 class="mb-0"><a id="headerLogo" href="../../index.php" class="text-decoration-none"><strong>NeoWork</strong></a></h2>
         <div id="header-buttons" class="d-flex">
-            <a href="../user_profile/user_profile.php" class="btn btn-outline-dark me-2">Mi Perfil</a>
-            <a href="../login/login.php" class="btn btn-dark">Logout</a>
         </div>
     </header>
 
     <main class="container mt-4">
         <div class="card mb-4">
             <div class="card-body">
-                <!-- Título centrado -->
-                <div class="text-center mb-4">
-                    <h2>Reseñas de la empresa</h2>
+                <!-- Título y botón -->
+                <div class=" d-flex justify-content-center align-items-center mb-4">
+                    <h2  class="mb-0">Reseñas de la empresa</h2>
                 </div>
                 
                 <!-- Contenedor de reseñas -->
@@ -48,6 +48,13 @@ $company_id = isset($_GET['id']) ? $_GET['id'] : (isset($_SESSION['id_empresa'])
                     <a href="../grade_company/grade_company.php?company_id=<?php echo $company_id; ?>" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>Agregar Reseña
                     </a>
+                </div>
+                <a id="add-review" href="../grade_company/grade_company.php?company_id=<?php echo $company_id; ?>" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Agregar Reseña
+                </a>
+                <br><br>
+                <div id="regresar" class="mb-3 text-center">
+
                 </div>
             </div>
         </div>
