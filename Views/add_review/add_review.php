@@ -12,9 +12,9 @@ if (!$idCandidato || $userType !== 'candidato') {
 $userName = $_SESSION['user_name'] ?? 'Usuario';
 
 // Capturar parámetros de la URL
-$id_puesto  = $_GET['id_puesto']  ?? null;
+// $id_puesto  = $_GET['id_puesto']  ?? null;
 $id_empresa = $_GET['id_empresa'] ?? null;
-if (!$id_puesto || !$id_empresa) {
+if (!$id_empresa) {
     die('Faltan parámetros necesarios para agregar reseña.');
 }
 ?>

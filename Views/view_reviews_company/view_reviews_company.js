@@ -1,12 +1,12 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // Obtener ID de empresa
     const urlParams = new URLSearchParams(window.location.search);
     const companyId = urlParams.get('id') || window.USER_ID;
     const user_type = window.USER_TYPE;
     const userId = window.USER_ID;
 
-    console.log('ID de empresa:', companyId); 
-    console.log('Tipo de usuario:', user_type); 
+    console.log('ID de empresa:', companyId);
+    console.log('Tipo de usuario:', user_type);
     console.log('ID de usuario:', userId);
 
     if (user_type == 'empresa') {
@@ -18,7 +18,7 @@ $(document).ready(function() {
         $('#regresar').append(
             `<a href="../view_company/view_company.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
         );
-    }else{
+    } else {
         $('#add-review').show();
         $('#header-buttons').append(
             `<a href="../user_profile/user_profile.php" class="btn btn-outline-dark me-2">Mi perfil</a>
@@ -42,7 +42,7 @@ $(document).ready(function() {
             url: `http://localhost/NeoWork_Refactorized/Routes/getReviews/${companyId}`,
             type: 'GET',
             dataType: 'json',
-            success: function(response) {
+            success: function (response) {
                 console.log('Respuesta completa:', response);
 
                 const reseñas = Object.keys(response)
@@ -55,7 +55,7 @@ $(document).ready(function() {
                     showMessage('No hay reseñas disponibles para esta empresa');
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Error en la petición:', {
                     status: status,
                     error: error,
@@ -68,11 +68,11 @@ $(document).ready(function() {
 
     function renderReviews(reviews) {
         let html = '';
-        
+
         reviews.forEach(review => {
             // Asegura que todos los campos tengan valores por defecto
             const tiempoLaborado = formatWorkTime(review.tiempo_laborado_meses || 0);
-            const nombreUsuario = review.nombre+ " " + review.apellidos || 'Usuario anónimo';
+            const nombreUsuario = review.nombre + " " + review.apellidos || 'Usuario anónimo';
             const puesto = review.puesto_desempenado || 'No especificado';
             const comentario = review.comentario || '';
 
@@ -94,17 +94,17 @@ $(document).ready(function() {
                         <div class="d-flex align-items-center mb-1">
                             <span class="me-2"><strong>Ambiente laboral:</strong></span>
                             ${convertToStars(review.ambiente_laboral)}
-                            <span class="ms-2">(${(review.ambiente_laboral * 5).toFixed(1)}/5)</span>
+                            <span class="ms-2">(${review.ambiente_laboral}/5)</span>
                         </div>
                         <div class="d-flex align-items-center mb-1">
                             <span class="me-2"><strong>Prestaciones:</strong></span>
                             ${convertToStars(review.prestaciones)}
-                            <span class="ms-2">(${(review.prestaciones * 5).toFixed(1)}/5)</span>
+                            <span class="ms-2">(${review.prestaciones}/5)</span>
                         </div>
                         <div class="d-flex align-items-center">
                             <span class="me-2"><strong>Salario:</strong></span>
                             ${convertToStars(review.salario)}
-                            <span class="ms-2">(${(review.salario * 5).toFixed(1)}/5)</span>
+                            <span class="ms-2">(${review.salario}/5)</span>
                         </div>
                     </div>
                 </div>
@@ -123,10 +123,9 @@ $(document).ready(function() {
     }
 
     function convertToStars(rating) {
-        const scaled = Math.round((rating || 0) * 5);
         let stars = '';
         for (let i = 1; i <= 5; i++) {
-            stars += i <= scaled ? '<i class="fas fa-star text-warning"></i>' : '<i class="far fa-star text-warning"></i>';
+            stars += i <= rating ? '<i class="fas fa-star text-warning"></i>' : '<i class="far fa-star text-warning"></i>';
         }
         return stars;
     }
