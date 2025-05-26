@@ -69,9 +69,9 @@ class AppController {
         ];
     }
 
-    public function agregarVacante($id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion): array {
+    public function agregarVacante($id_empresa, $titulo, $descripcion, $salario, $prestaciones): array {
         $query = new Querys();
-        $ok = $query->agregarVacante($id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion);
+        $ok = $query->agregarVacante($id_empresa, $titulo, $descripcion, $salario, $prestaciones);
     
         // Decodificar la data que generó el Querys
         $raw = json_decode($query->getData(), true);
@@ -98,9 +98,9 @@ class AppController {
     ];
     }
 
-    public function editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion): array {
+    public function editJob($id, $titulo, $descripcion, $salario, $prestaciones): array {
         $query = new Querys();
-        return $query->editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion);
+        return $query->editJob($id, $titulo, $descripcion, $salario, $prestaciones);
     }
     
 

@@ -15,7 +15,7 @@ $(document).ready(function() {
     $searchButton.on('click', loadJobs);
     $filters.on('change', loadJobs);
     $addJobBtn.on('click', function() {
-        window.location.href = '../post_job/post_job.php';
+        window.location.href = '../new_vacancy/new_vacancy.php';
     });
 
     function loadUser() {
@@ -117,9 +117,7 @@ $(document).ready(function() {
     }
 
     function editJob(jobId) {
-        if (confirm('¿Editar esta vacante?')) {
-            window.location.href = `../post_job/post_job.php?edit=${jobId}`;
-        }
+        window.location.href = `../new_vacancy/new_vacancy.php?edit=${jobId}`;
     }
 
     function deleteJob(jobId) {

@@ -167,7 +167,6 @@ $app->post('/agregarVacante', function (Request $request, Response $response, ar
     $descripcion      = $data['requerimientos']   ?? '';
     $salario          = $data['salario']          ?? '';
     $prestaciones     = $data['prestaciones']     ?? '';
-    $fecha_publicacion = date('Y-m-d H:i:s');
 
     $controller = new AppController();
     $result = $controller->agregarVacante(
@@ -176,7 +175,6 @@ $app->post('/agregarVacante', function (Request $request, Response $response, ar
         $descripcion,
         $salario,
         $prestaciones,
-        $fecha_publicacion
     );
 
     $response->getBody()->write(json_encode($result));
@@ -244,12 +242,10 @@ $app->post('/editJob/{id}', function (Request $request, Response $response, $arg
                         ->withHeader('Content-Type', 'application/json');
     }
 
-    $id_empresa       = $data['id_empresa']       ?? null;
     $titulo           = $data['nombre_vacante']   ?? '';
     $descripcion      = $data['requerimientos']   ?? '';
     $salario          = $data['salario']          ?? '';
     $prestaciones     = $data['prestaciones']     ?? '';
-    $fecha_publicacion = date('Y-m-d H:i:s');
 
     error_log("Editando vacante ID: $id");
     error_log("Datos recibidos: " . print_r($data, true));
@@ -257,12 +253,10 @@ $app->post('/editJob/{id}', function (Request $request, Response $response, $arg
     $controller = new AppController();
     $result = $controller->editJob(
         $id,
-        $id_empresa,
         $titulo,
         $descripcion,
         $salario,
         $prestaciones,
-        $fecha_publicacion
     );
 
     $response->getBody()->write(json_encode($result));

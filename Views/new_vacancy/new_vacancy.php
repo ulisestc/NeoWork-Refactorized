@@ -10,6 +10,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script>
+        window.USER_ID = <?php echo json_encode($idEmpresa); ?>;
+        window.USER_TYPE = 'company';
+    </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Publicar vacante - NeoWork</title>
@@ -66,7 +70,7 @@
       </div>
 
       <div class="mb-3">
-        <label for="requerimientos" class="form-label">Requerimientos</label>
+        <label for="requerimientos" class="form-label">Descripción</label>
         <textarea
           name="requerimientos"
           id="requerimientos"
@@ -78,14 +82,18 @@
 
       <div class="mb-3">
         <label for="salario" class="form-label">Salario</label>
-        <input
-          type="text"
-          name="salario"
-          id="salario"
-          class="form-control"
-          required
-        />
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input
+            type="number"
+            name="salario"
+            id="salario"
+            class="form-control"
+            required
+          />
+        </div>
       </div>
+
 
       <div class="mb-3">
         <label for="prestaciones" class="form-label">Prestaciones</label>
@@ -98,9 +106,13 @@
         ></textarea>
       </div>
 
-      <button type="submit" class="btn btn-dark w-100 py-2">
+      <button type="submit" id="btn-submit" class="btn btn-dark w-100 py-2">
         Publicar vacante
       </button>
+      <br><br>
+      <a href="../view_company/view_company.php" class="btn btn-outline-dark w-100 py-2">
+        Regresar
+      </a>
     </form>
   </main>
 

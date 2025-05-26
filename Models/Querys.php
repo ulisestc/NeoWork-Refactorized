@@ -275,7 +275,7 @@ class Querys extends DataBase{
         return $this->data['success'];
     }
 
-    public function agregarVacante($id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion) {
+    public function agregarVacante($id_empresa, $titulo, $descripcion, $salario, $prestaciones) {
         // Reset de data
     $this->data = [];
 
@@ -283,7 +283,7 @@ class Querys extends DataBase{
     $insertSql = "
         INSERT INTO Puestos
             (id_empresa, titulo, descripcion, salario, prestaciones, fecha_publicacion)
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, NOW())
     ";
 
     $stmt = $this->conexion->prepare($insertSql);
@@ -295,13 +295,12 @@ class Querys extends DataBase{
     }
 
         $stmt->bind_param(
-            "isssss",
+            "issss",
             $id_empresa,
             $titulo,
             $descripcion,
             $salario,
-            $prestaciones,
-            $fecha_publicacion
+            $prestaciones
         );
 
         if ($stmt->execute()) {
@@ -363,18 +362,16 @@ class Querys extends DataBase{
         return $this->data['success'];
     }
 
-    public function editJob($id, $id_empresa, $titulo, $descripcion, $salario, $prestaciones, $fecha_publicacion) {
+    public function editJob($id, $titulo, $descripcion, $salario, $prestaciones) {
         $this->data = [];
     
         $sql = "
             UPDATE Puestos
             SET 
-                id_empresa       = ?,
                 titulo           = ?,
                 descripcion      = ?,
                 salario          = ?,
-                prestaciones     = ?,
-                fecha_publicacion= ?
+                prestaciones     = ?
             WHERE id_puesto = ?
         ";
     
@@ -389,13 +386,11 @@ class Querys extends DataBase{
     
         // Tipos: i = int, s = string (6 strings y al final otro int para el id)
         $stmt->bind_param(
-            "isssssi",
-            $id_empresa,
+            "ssssi",
             $titulo,
             $descripcion,
             $salario,
             $prestaciones,
-            $fecha_publicacion,
             $id
         );
     
