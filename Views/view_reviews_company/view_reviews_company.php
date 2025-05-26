@@ -25,7 +25,7 @@ $company_id = isset($_GET['id']) ? $_GET['id'] : (isset($_SESSION['id_empresa'])
     <header class="header d-flex justify-content-between align-items-center px-4 py-3">
         <h2 class="mb-0"><a id="headerLogo" href="../../index.php" class="text-decoration-none"><strong>NeoWork</strong></a></h2>
         <div id="header-buttons" class="d-flex">
-            <a href="../company_profile/company_profile.php" class="btn btn-outline-dark me-2">Mi Perfil</a>
+            <a href="../user_profile/user_profile.php" class="btn btn-outline-dark me-2">Mi Perfil</a>
             <a href="../login/login.php" class="btn btn-dark">Logout</a>
         </div>
     </header>
@@ -33,17 +33,21 @@ $company_id = isset($_GET['id']) ? $_GET['id'] : (isset($_SESSION['id_empresa'])
     <main class="container mt-4">
         <div class="card mb-4">
             <div class="card-body">
-                <!-- Título y botón -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="mb-0">Reseñas de la empresa</h2>
-                    <a href="../grade_company/grade_company.php?company_id=<?php echo $company_id; ?>" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Agregar Reseña
-                    </a>
+                <!-- Título centrado -->
+                <div class="text-center mb-4">
+                    <h2>Reseñas de la empresa</h2>
                 </div>
                 
                 <!-- Contenedor de reseñas -->
                 <div id="reviews-container">
-                    <!-- Las reseñas se cargan aquí dinámicamente -->
+                    <!-- Las reseñas se cargarán aquí dinámicamente -->
+                </div>
+                
+                <!-- Botón agregar reseña (centrado y debajo de las reseñas) -->
+                <div class="text-center mt-4">
+                    <a href="../grade_company/grade_company.php?company_id=<?php echo $company_id; ?>" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Agregar Reseña
+                    </a>
                 </div>
             </div>
         </div>
