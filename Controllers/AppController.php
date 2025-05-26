@@ -116,6 +116,12 @@ class AppController {
         return $query->getData();
     }
 
+    public function getComments($id) {
+        $query = new Querys();
+        $query->getComments($id);
+        return $query->getData();
+    }
+    
     public function getCompany($id) {
         $query = new Querys();
         $query->getCompany($id);

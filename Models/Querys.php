@@ -610,6 +610,53 @@ class Querys extends DataBase{
         $this->conexion->close();
     }
 
+    public function getComments($id) {
+    $this->data = [];
+
+    $query = "SELECT DISTINCT
+                c.id_comentario, 
+                c.id_puesto, 
+                c.id_candidato, 
+                c.comentario, 
+                c.fecha,
+                a.nombre,
+                a.apellidos
+                FROM comentariospuestos c
+                LEFT JOIN candidatos a ON c.id_candidato = a.id_candidato
+                WHERE c.id_puesto = ?
+                ORDER BY c.fecha DESC";
+
+    // Preparar la consulta
+    $stmt = $this->conexion->prepare($query);
+    if ($stmt) {
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $this->data[] = $row;
+            }
+            $this->data['success'] = true;
+            $this->data['message'] = 'Comentarios obtenidos exitosamente';
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = 'No se encontraron comentarios';
+        }
+
+        $stmt->close();
+    } else {
+        $this->data['success'] = false;
+        $this->data['message'] = 'Error al preparar la consulta: ' . $this->conexion->error;
+    }
+
+    $this->conexion->close();
+
+    // echo json_encode($this->data);
+}
+
+
+
     public function getJob($id) {
         $this->data = [];
     
@@ -719,6 +766,33 @@ class Querys extends DataBase{
         }
         $this->conexion->close();
     }
+
+    public function getReviews($id_empresa) {
+        $this->data = array();
+    
+        $query = "SELECT * FROM reseñas WHERE id_empresa = $id_empresa";
+        $result = $this->conexion->query($query);
+    
+        if ($result) {
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $this->data[] = $row;
+                }
+                $this->data['success'] = true;
+                $this->data['message'] = 'Reseñas obtenidas exitosamente';
+            } else {
+                $this->data['success'] = false;
+                $this->data['message'] = 'No se encontraron reseñas';
+            }
+        } else {
+            $this->data['success'] = false;
+            $this->data['message'] = 'Error en la consulta: ' . $this->conexion->error;
+        }
+    
+        $this->conexion->close();
+    }
+
+    
     
 }
 ?>

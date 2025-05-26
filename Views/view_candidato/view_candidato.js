@@ -83,7 +83,7 @@ $(document).ready(function() {
                     </p>
                     <div class="d-flex justify-content-between align-items-center">
                         <small class="text-muted">Publicado ${job.fecha_publicacion ? formatDate(job.fecha_publicacion) : 'Fecha no disponible'}</small>
-                        <a href="../job_details/job_details.php" class="btn btn-sm btn-outline-dark">Ver detalles</a>
+                        <a href="../job_details/job_details.php?id=${job.id_puesto}&id_empresa=${job.id_empresa}" class="btn btn-sm btn-outline-dark">Ver detalles</a>
                     </div>
                 </div>
             </div>

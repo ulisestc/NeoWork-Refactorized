@@ -109,7 +109,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Script para cargar datos -->
-    <script src="../public/js/job_details.js"></script>
     <script src="job_details.js"></script>
+    <!-- <script src="job_details.js"></script> -->
 </body>
 </html>

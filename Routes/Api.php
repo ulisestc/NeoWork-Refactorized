@@ -137,6 +137,10 @@ $app->get('/getReviews/{id}', function (Request $request, Response $response, ar
     // Llama al método getReviews del controlador
     $result = $controller->getReviews($id);
     
+    if (is_string($result)) {
+        $result = json_decode($result, true); // o false si quieres stdClass
+    }
+
     // Escribe la respuesta JSON
     $response->getBody()->write(json_encode($result));
     
@@ -365,8 +369,11 @@ $app->get('/getApplications/{id}', function (Request $request, Response $respons
     
     // Llama al método getApplications del controlador
     $result = $controller->getApplications($id);
-    
-    // Escribe la respuesta JSON
+
+    if (is_string($result)) {
+        $result = json_decode($result, true); // o false si quieres stdClass
+    }
+
     $response->getBody()->write(json_encode($result));
     
     return $response->withHeader('Content-Type', 'application/json');
@@ -424,6 +431,21 @@ $app->post('/registerCompany', function (Request $request, Response $response) {
 
     return $response->withHeader('Content-Type', 'application/json');
 
+});
+
+$app->get('/getComments/{id}', function (Request $request, Response $response, array $args) use ($controller) {
+    $id = $args['id'];
+    // Llama al método getComments del controlador
+    $result = $controller->getComments($id);
+    
+    if (is_string($result)) {
+        $result = json_decode($result, true); // o false si quieres stdClass
+    }
+
+    // Escribe la respuesta JSON
+    $response->getBody()->write(json_encode($result));
+    
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 $app->run();
