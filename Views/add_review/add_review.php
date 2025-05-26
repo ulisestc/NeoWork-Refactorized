@@ -126,8 +126,8 @@ if (!$id_empresa) {
                     <button type="submit" class="btn btn-dark">
                         <i class="fas fa-paper-plane me-2"></i> Enviar reseña
                     </button>
-                    <a href="../job_details/job_details.php?id=<?= $id_puesto ?>&id_empresa=<?= $id_empresa ?>" class="btn btn-outline-dark">
-                        <i class="fas fa-arrow-left me-2"></i> Volver al puesto
+                    <a href="../view_candidato/view_candidato.php" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i> Regresar al listado
                     </a>
                 </div>
             </form>

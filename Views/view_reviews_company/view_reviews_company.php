@@ -44,7 +44,7 @@
                 </div>
                 
                 <a id="add-review" href="../add_review/add_review.php?id_empresa=<?php echo $company_id; ?>" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>Agregar Reseña
+                    <i class="fas fa-plus me-2">Agregar Reseña</i>
                 </a>
                 <br><br>
                 <div id="regresar" class="mb-3 text-center">
