@@ -286,7 +286,6 @@ textarea {
     .footer-social {
         justify-content: center;
     }
-<<<<<<< HEAD
 }
 
 /* Estilos para job_details.php */
@@ -385,6 +384,33 @@ body {
     width: 100%;
 }
 
-=======
+/* Estilos para los botones de acción de empresa */
+.btn-group .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
 }
->>>>>>> dabc1205ae865cc3eb9e66005a5df2071ba97506
+
+.job-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+/* Botón de nueva vacante */
+#add-job-btn {
+    white-space: nowrap;
+}
+
+/* Responsive para filtros */
+@media (max-width: 768px) {
+    .filters-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .filters-container select, 
+    .filters-container #add-job-btn {
+        width: 100%;
+        margin-left: 0 !important;
+    }
+}
