@@ -25,13 +25,13 @@
     <header class="header d-flex justify-content-between align-items-center">
         <h2 class="mb-0"><strong>NeoWork</strong></h2>
         <div id="header-buttons">
-            <a id="user" href="../company_profile/company_profile.php" class="btn btn-outline-dark me-2">USER</a>
+            <a id="user" href="../view_profile_company/view_profile_company.php" class="btn btn-outline-dark me-2">USER</a>
             <a id="logout" href="../login/login.php" class="btn btn-dark">Logout</a>
         </div>
     </header>
 
     <main class="container mt-4">
-        <!-- Barra de búsqueda idéntica a view_candidato -->
+        <!-- Barra de búsqueda  -->
         <div class="row justify-content-center mb-4">
             <div class="col-md-8">
                 <div class="input-group">

@@ -19,24 +19,39 @@ $(document).ready(function() {
     });
 
     function loadUser() {
-        if (!window.USER_ID) return;
-        
-        $.ajax({
-            url: `http://localhost:8080/NeoWork_Refactorized/Routes/getCompanyUser/${window.USER_ID}`,
-            type: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                if (response && response.success === true) {
-                    const user = response[0];
-                    if (user && user.nombre) {
-                        renderUser(user.nombre);
-                    }
+    $.ajax({
+        url: `http://localhost/NeoWork_Refactorized/Routes/getUser/${window.USER_ID}`,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log('Respuesta completa del backend:', response);
+
+            // Validar que success está presente y es true
+            if (response && response.success === true) {
+                // Directly access the user object using the key "0"
+                const user = response[0];
+
+                if (user && user.nombre) {
+                    console.log('Usuario recibido:', user);
+                    renderUser(user.nombre);
+                } else {
+                    console.error('No se encontró nombre en el objeto de usuario:', user);
                 }
-            },
-            error: function(error) {
-                console.error('Error al cargar usuario:', error);
+            } else {
+                console.warn('La respuesta no fue exitosa o success es falso.');
+                $userContainer.html(`<span class="text-danger">No se pudo cargar el usuario.</span>`);
             }
-        });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error en la petición AJAX:', error, xhr.responseJSON);
+            $userContainer.html(`
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error al cargar usuario: ${xhr.responseJSON?.message || 'Intenta nuevamente más tarde.'}
+                </div>
+            `);
+        }
+    });
     }
 
     function renderUser(name) {
@@ -110,7 +125,7 @@ $(document).ready(function() {
     function deleteJob(jobId) {
         if (confirm('¿Eliminar permanentemente esta vacante?')) {
             $.ajax({
-                url: `http://localhost:8080/NeoWork_Refactorized/Routes/deleteJob/${jobId}`,
+                url: `http://localhost/NeoWork_Refactorized/Routes/deleteJob/${jobId}`,
                 type: 'DELETE',
                 dataType: 'json',
                 success: function(response) {
@@ -145,7 +160,7 @@ $(document).ready(function() {
 
         // Llamada AJAX al endpoint del API
         $.ajax({
-            url: `http://localhost:8080/NeoWork_Refactorized/Routes/getJobs`,
+            url: `http://localhost/NeoWork_Refactorized/Routes/getJobs`,
             type: 'GET',
             dataType: 'json',
             success: function(response) {
