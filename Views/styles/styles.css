@@ -8,6 +8,11 @@ body {
     flex-direction: column;
 }
 
+#headerLogo{
+    color: #000;
+    text-decoration: none;
+}
+
 main {
     flex: 1;
     display: flex;

@@ -35,7 +35,7 @@
 </head>
 <body>
   <header class="header">
-    <h2><strong>NeoWork</strong></h2>
+    <h2><a id="headerLogo" href="../../index.php"><strong>NeoWork</strong></a></h2>
   </header>
 
   <!-- Oculto: información de la empresa logueada -->
