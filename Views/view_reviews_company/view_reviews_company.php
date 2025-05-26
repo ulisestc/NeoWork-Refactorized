@@ -43,12 +43,6 @@
                     <!-- Las reseñas se cargarán aquí dinámicamente -->
                 </div>
                 
-                <!-- Botón agregar reseña (centrado y debajo de las reseñas) -->
-                <div class="text-center mt-4">
-                    <a href="../grade_company/grade_company.php?company_id=<?php echo $company_id; ?>" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Agregar Reseña
-                    </a>
-                </div>
                 <a id="add-review" href="../grade_company/grade_company.php?company_id=<?php echo $company_id; ?>" class="btn btn-primary">
                     <i class="fas fa-plus me-2"></i>Agregar Reseña
                 </a>
