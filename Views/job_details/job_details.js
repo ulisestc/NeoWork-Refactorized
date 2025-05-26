@@ -17,7 +17,6 @@ $(document).ready(function() {
     const $jobBenefits = $('#job-benefits');
     const $companyReviewsContainer = $('#reviews-container');
     const $commentsContainer = $('#comments-container');
-    // const $applyButton = $('#apply-btnn');
 
     loadJob();
 
@@ -26,38 +25,57 @@ $(document).ready(function() {
         $('#apply-btn').hide();
         $('#add-comment-form').hide();
         $('#apply_and_back').append(
-            `            <a href="../view_company/view_company.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
+            `<a href="../view_company/view_company.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
         );
-    }else{
+    } else {
         $('#apply_and_back').append(
-            `            <a href="../view_candidato/view_candidato.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
+            `<a href="../view_candidato/view_candidato.php" class="btn btn-outline-dark btn-lg">Regresar</a>`
         );
     }
 
-    $('#add-comment-form').on('submit', function (e) {
-        e.preventDefault(); // Evitar el envío del formulario por defecto
-
-        const commentData = {
+    // Evento de aplicar al trabajo
+    $('#apply-btn').on('click', function () {
+        const data = {
             id_puesto: jobId,
-            id_candidato: userId, // Asegúrate de contar con este campo oculto en el formulario
-            comment: $('#comment-text').val()  // Renombrado para ajustarse a la API
+            id_candidato: userId
         };
 
         $.ajax({
-            url: 'http://localhost/NeoWork_Refactorized/Routes/addComment', // URL de la API
+            url: 'http://localhost/NeoWork_Refactorized/Routes/aplicaratrabajo',
             type: 'POST',
-            data: JSON.stringify(commentData), // Convertir los datos a JSON
-            contentType: 'application/json', // Especificar el tipo de contenido
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (response) {
+                console.log('Aplicación enviada con éxito:', response);
+                $('#applied-label').show(); // Mostrar la etiqueta de "Aplicado"
+                $('#apply-btn').prop('disabled', true); // Deshabilitar el botón
+                alert('Has aplicado con éxito al puesto.');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al aplicar:', error);
+                alert('Ocurrió un error al aplicar. Intenta nuevamente.');
+            }
+        });
+    });
+
+    $('#add-comment-form').on('submit', function (e) {
+        e.preventDefault();
+
+        const commentData = {
+            id_puesto: jobId,
+            id_candidato: userId,
+            comment: $('#comment-text').val()
+        };
+
+        $.ajax({
+            url: 'http://localhost/NeoWork_Refactorized/Routes/addComment',
+            type: 'POST',
+            data: JSON.stringify(commentData),
+            contentType: 'application/json',
             success: function (response) {
                 console.log('Comentario enviado con éxito:', response);
-
-                // Mostrar un mensaje de éxito al usuario
                 alert('Comentario enviado con éxito.');
-
-                // Limpiar el formulario
                 $('#add-comment-form')[0].reset();
-
-                // Recargar los comentarios (opcional)
                 loadJob();
             },
             error: function (xhr, status, error) {
@@ -82,13 +100,7 @@ $(document).ready(function() {
                 $jobSalary.text('$' + (response.data.salario?.toLocaleString('es-MX') || 'No especificado'));
                 $jobDescription.text(response.data.descripcion || 'No especificado');
                 $jobBenefits.text(response.data.prestaciones || 'No especificado');
-
-                // Habilitar botón de reseña
                 $btnReview.prop('disabled', false);
-
-                // loadCompanyDetails(job.id_empresa);
-                // loadApplicationsCount(jobId);
-                // loadCompanyReviews(job.id_empresa);
             },
             error: function(xhr) {
                 console.error('Error al cargar el puesto:', xhr);
@@ -100,7 +112,6 @@ $(document).ready(function() {
             url: `http://localhost/NeoWork_Refactorized/Routes/getApplications/${jobId}`,
             type: 'GET',
             success: function(response) {           
-                // Filtra las claves numéricas (índices) del objeto
                 const solicitudes = Object.keys(response).filter(key => !isNaN(parseInt(key)));
                 console.log('Solicitudes:', solicitudes.length);
                 $jobApplicationsCount.text(solicitudes.length || '0');
@@ -116,8 +127,6 @@ $(document).ready(function() {
             type: 'GET',
             success: function(response) {
                 console.log('Reseñas de la empresa:', response);
-
-                // Filtramos solo las claves numéricas (que contienen las reseñas)
                 const reseñas = Object.keys(response)
                     .filter(key => !isNaN(parseInt(key)))
                     .map(key => response[key]);
@@ -156,8 +165,6 @@ $(document).ready(function() {
             success: function(response) {
                 console.log('Comentarios del puesto:', response);
                 $commentsContainer.empty();
-
-                // Extraer solo los comentarios (claves numéricas)
                 const comentarios = Object.keys(response)
                     .filter(key => !isNaN(parseInt(key)))
                     .map(key => response[key]);
@@ -183,9 +190,6 @@ $(document).ready(function() {
                 $commentsContainer.html('<p>Error al cargar los comentarios.</p>');
             }
         });
-
     }
-
-
 
 });
