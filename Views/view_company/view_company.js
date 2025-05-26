@@ -134,77 +134,93 @@ $(document).ready(function() {
             search: $searchInput.val(),
             area: $('.filters-container select:nth-child(1)').val(),
             location: $('.filters-container select:nth-child(2)').val(),
-            salary: $('.filters-container select:nth-child(3)').val(),
-            companyId: window.USER_TYPE === 'company' ? window.USER_ID : null
+            salary: $('.filters-container select:nth-child(3)').val()
         };
+
+        // Debug: mostrar filtros en consola
+        console.log('Filtros aplicados:', filtersData);
 
         // Mostrar loader
         $jobsContainer.html('<div class="alert alert-info">Buscando empleos...</div>');
 
+        // Llamada AJAX al endpoint del API
         $.ajax({
             url: `http://localhost:8080/NeoWork_Refactorized/Routes/getJobs`,
             type: 'GET',
-            data: filtersData,
             dataType: 'json',
             success: function(response) {
+                console.log('Respuesta del servidor:', response);
                 if (response.success) {
+                    // GUARDAMOS lista de emplkeos
                     const jobs = response.data;
-                    
-                    // Actualizar filtros
+                    // Seleccionamos los filtros
                     const $areaSelect = $('.filters-container select:nth-child(1)');
                     const $locationSelect = $('.filters-container select:nth-child(2)');
                     const $salarySelect = $('.filters-container select:nth-child(3)');
-                    
-                    // Guardar selecciones actuales
+                    //recordamos valor seleccionado de cada filtro 
                     const areaValue = $areaSelect.val();
                     const locationValue = $locationSelect.val();
                     const salaryValue = $salarySelect.val();
-                    
-                    // Limpiar y llenar selectores
+                    // Limpiamos los selectores para evitar duplicados (bug lista infinita)
                     $areaSelect.html('<option value="">Todas las áreas</option>');
                     $locationSelect.html('<option value="">Todas las ubicaciones</option>');
                     $salarySelect.html('<option value="">Todos los salarios</option>');
-                    
+                    // Obtenemos los valores únicos de cada filtro
                     const areas = new Set();
                     const locations = new Set();
                     const salaries = new Set();
 
-                    jobs.forEach(job => {
-                        if (job.area) areas.add(job.area);
-                        if (job.direccion) locations.add(job.direccion);
-                        if (job.salario) salaries.add(job.salario);
+                    jobs.forEach(jobs => {
+                        if (jobs.area) areas.add(jobs.area);
+                        if (jobs.direccion) locations.add(jobs.direccion);
+                        if (jobs.salario) salaries.add(jobs.salario);
                     });
-                    
+                    // Metemos los valores únicos en los selectores
                     areas.forEach(area => $areaSelect.append(`<option value="${area}">${area}</option>`));
                     locations.forEach(location => $locationSelect.append(`<option value="${location}">${location}</option>`));
                     salaries.forEach(salary => $salarySelect.append(`<option value="${salary}">+$${parseInt(salary).toLocaleString()}</option>`));
-                    
-                    // Restaurar selecciones
+
+                    // Seleccionamos el valor que eligió el user
                     $areaSelect.val(areaValue);
                     $locationSelect.val(locationValue);
                     $salarySelect.val(salaryValue);
-                    
-                    renderJobs(jobs);
+                    // Filtramos los empleos según los filtros seleccionados
+                    if(filtersData.search!== '' || filtersData.area !== null || filtersData.location !== null || filtersData.salary !== null) {
+                    response.data = response.data.filter(job => {
+                        
+                        const search = filtersData.search?.toLowerCase() || "";
+                        const jobText = Object.values(job).join(" ").toLowerCase();
+
+
+                        return (!filtersData.search || jobText.includes(search)) &&
+                                (!filtersData.area || job.area === filtersData.area) &&
+                                (!filtersData.location || job.direccion === filtersData.location) &&
+                                (!filtersData.salary || job.salario === filtersData.salary);
+                    });
+                }
+                renderJobs(response.data);
                 } else {
+                    console.error('Error: La respuesta del servidor no contiene un array de empleos:', response);
                     $jobsContainer.html(`
                         <div class="alert alert-danger">
                             <i class="fas fa-exclamation-triangle me-2"></i>
-                            Error al cargar empleos
+                            Error al cargar empleos: Respuesta inesperada del servidor.
                         </div>
                     `);
                 }
             },
-            error: function(error) {
+            error: function(xhr, status, error) {
                 console.error('Error:', error);
                 $jobsContainer.html(`
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        Error al cargar empleos
+                        Error al cargar empleos: ${xhr.responseJSON?.message || 'Intenta nuevamente más tarde.'}
                     </div>
                 `);
             }
         });
     }
+
 
     function formatDate(dateString) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
