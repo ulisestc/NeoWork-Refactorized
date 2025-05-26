@@ -1,29 +1,25 @@
 <?php
-  // Capturar parámetros GET
-    $id_puesto  = $_GET['id_puesto'] ?? $_GET['id'] ?? null;
-    $id_empresa = $_GET['id_empresa'] ?? null;
-    
-    if (!$id_puesto || !$id_empresa) {
-        // Redirigir si faltan parámetros
-        header('Location: unregistered_user.php');
-        exit;
-    }
-    ?>
+// Capturar parámetros GET
+$id_puesto  = $_GET['id_puesto'] ?? $_GET['id'] ?? null;
+$id_empresa = $_GET['id_empresa'] ?? null;
 
-<?php
-    session_start();
+if (!$id_puesto || !$id_empresa) {
+    // Redirigir si faltan parámetros
+    header('Location: unregistered_user.php');
+    exit;
+}
 
-    $user_type = $_SESSION['user_type'] ?? null;
+session_start();
+$user_type = $_SESSION['user_type'] ?? null;
 
-    if ($user_type === 'candidato') {
-        $user_id = $_SESSION['id_candidato'] ?? null;
-    } elseif ($user_type === 'empresa') {
-        $user_id = $_SESSION['id_empresa'] ?? null;
-    } else {
-        $user_id = null;
-    }
+if ($user_type === 'candidato') {
+    $user_id = $_SESSION['id_candidato'] ?? null;
+} elseif ($user_type === 'empresa') {
+    $user_id = $_SESSION['id_empresa'] ?? null;
+} else {
+    $user_id = null;
+}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -112,34 +108,65 @@
 
         <!-- Bloque para agregar reseña -->
         <div id="add-review" class="card mb-4">
-        <div class="card-body text-center">
-            <h5 class="card-title">¿Ya trabajaste aquí?</h5>
-            <p class="card-text">Comparte tu opinión con los demás para ayudarlos a tomar mejores decisiones.</p>
-            <button id="btn-agregar-reseña"
-                    class="btn btn-outline-primary"
-                    <?= ($id_puesto && $id_empresa) ? '' : 'disabled' ?>
-                    data-id-puesto="<?= htmlspecialchars($id_puesto) ?>"
-                    data-id-empresa="<?= htmlspecialchars($id_empresa) ?>">
-                <i class="fas fa-building-circle-plus me-2"></i>Agregar Reseña
-            </button>
-        </div>
+            <div class="card-body text-center">
+                <h5 class="card-title">¿Ya trabajaste aquí?</h5>
+                <p class="card-text">Comparte tu opinión con los demás para ayudarlos a tomar mejores decisiones.</p>
+                <button id="btn-agregar-reseña"
+                        class="btn btn-outline-primary"
+                        <?= ($id_puesto && $id_empresa) ? '' : 'disabled' ?>
+                        data-id-puesto="<?= htmlspecialchars($id_puesto) ?>"
+                        data-id-empresa="<?= htmlspecialchars($id_empresa) ?>">
+                    <i class="fas fa-building-circle-plus me-2"></i>Agregar Reseña
+                </button>
+            </div>
         </div>
 
         <!-- Botón de acción -->
         <div id="apply_and_back" class="text-center mb-4">
             <button id="apply-btn" class="btn btn-dark btn-lg">Aplicar al puesto</button>
             <br><br>
+            <span id="applied-label" style="display: none; color: green; font-weight: bold;">
+                ¡Ya aplicaste a este puesto!
+            </span>
         </div>
-
     </main>
 
-    <?php include '../templates/footer.php' ?>
+    <?php include '../templates/footer.php'; ?>
 
     <!-- jQuery + Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Script para cargar datos -->
+
+    <!-- Script para cargar detalles -->
     <script src="job_details.js"></script>
-    <!-- <script src="job_details.js"></script> -->
+
+    <!-- Script de aplicación al puesto -->
+    <script>
+        $(document).ready(function () {
+            const userId = window.USER_ID;
+            const userType = window.USER_TYPE;
+            const jobId = new URLSearchParams(window.location.search).get('id_puesto') || new URLSearchParams(window.location.search).get('id');
+
+            if (userType === 'candidato') {
+                $('#apply-btn').on('click', function () {
+                    $.ajax({
+                        url: 'http://localhost/NeoWork_Refactorized/Routes/aplicaratrabajo',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ id_puesto: jobId, id_candidato: userId }),
+                        success: function () {
+                            $('#applied-label').show();
+                            $('#apply-btn').prop('disabled', true);
+                        },
+                        error: function () {
+                            alert('Error al aplicar. Intenta nuevamente.');
+                        }
+                    });
+                });
+            } else {
+                $('#apply-btn').hide();
+            }
+        });
+    </script>
 </body>
 </html>
